@@ -1,0 +1,14 @@
+/* src/components/Map/instructions.module.css */
+
+.instructionsContainer {
+  position: absolute;
+  margin: 20px;
+  width: 25%;
+  top: 0;
+  bottom: 20%;
+  padding: 20px;
+  background-color: #fff;
+  overflow-y: scroll;
+  font-family: sans-serif;
+  z-index: 1000; /* Add z-index to make sure it's on top of the map */
+}

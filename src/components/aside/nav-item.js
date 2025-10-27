@@ -1,12 +1,19 @@
 import styles from "./nav-item.module.css";
 
-export default function NavItem({ icon: Icon, title }) {
+export default function NavItem({ icon: Icon, title, onClick, isActive }) {
+  const navItemClasses = `
+    ${styles.navItem}
+    ${isActive ? styles.active : ""}
+  `;
+
   return (
-    // <a href="#" style={currentStyle} title={title}>
-    //   <Icon size={20} />
-    // </a>
-    <a href="#" title={title} className={styles.navItem}>
+    <button
+      type="button"
+      title={title}
+      className={navItemClasses.trim()}
+      onClick={onClick}
+    >
       <Icon size={20} />
-    </a>
+    </button>
   );
 }

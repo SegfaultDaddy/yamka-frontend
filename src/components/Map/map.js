@@ -8,12 +8,16 @@ import styles from "./map.module.css";
 
 import { MaptilerLayer } from "@maptiler/leaflet-maptilersdk";
 
-const Map = () => {
+const Map = ({ routeData, markerLocation, activePanel }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
+  const routeLayer = useRef(null);
+  const markerLayer = useRef(null);
   const center = { lat: 49.842957, lng: 24.031111 };
   const [zoom] = useState(14);
 
+  //////////////////////////////
+  // Effect to initialize the map
   useEffect(() => {
     if (map.current) return;
 
@@ -30,6 +34,50 @@ const Map = () => {
       style: `https://api.maptiler.com/maps/${MAP_STYLE_CODE}/style.json?key=${MAP_API_KEY}`,
     }).addTo(map.current);
   }, [center.lng, center.lat, zoom]);
+
+  //////////////////////////////////
+  // Effect for drawing the route
+  useEffect(() => {
+    if (!map.current) return;
+
+    if (routeLayer.current) {
+      map.current.removeLayer(routeLayer.current);
+    }
+
+    if (routeData) {
+      const newRoute = L.geoJSON(routeData, {
+        style: () => ({
+          color: "#3388ff",
+          weight: 5,
+          opacity: 0.7,
+        }),
+      });
+
+      newRoute.addTo(map.current);
+      routeLayer.current = newRoute;
+
+      map.current.fitBounds(newRoute.getBounds());
+    }
+  }, [routeData]);
+
+  //////////////////////////////////////////////////////
+  //  USE EFFECT FOR THE MARKER
+  useEffect(() => {
+    if (!map.current) return;
+
+    // Remove any existing marker
+    if (markerLayer.current) {
+      map.current.removeLayer(markerLayer.current);
+    }
+
+    // If we have a new location, add a marker
+    if (markerLocation) {
+      const newMarker = L.marker(markerLocation).addTo(map.current);
+
+      map.current.panTo(markerLocation);
+      markerLayer.current = newMarker;
+    }
+  }, [markerLocation]);
 
   return (
     <div className={styles.mapWrap}>

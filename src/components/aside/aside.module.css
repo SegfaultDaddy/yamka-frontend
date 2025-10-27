@@ -1,4 +1,9 @@
 .sidebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1002;
+
   width: 3%;
   min-width: 3rem;
   background-color: #1f2937;
@@ -11,6 +16,7 @@
   padding: 1rem 0;
   flex-shrink: 0;
   height: 100vh;
+  overflow: hidden;
 }
 
 .sidebarContent {
