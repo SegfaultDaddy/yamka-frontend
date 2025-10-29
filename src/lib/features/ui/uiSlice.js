@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   activePanel: null,
   markerLocation: null,
+  route: null,
 };
 
 export const uiSlice = createSlice({
@@ -19,10 +20,13 @@ export const uiSlice = createSlice({
     setMarkerLocation: (state, action) => {
       state.markerLocation = action.payload;
     },
+    setRoute: (state, action) => {
+      state.route = action.payload;
+    },
   },
 });
 
-export const { setActivePanel, togglePanel, setMarkerLocation } =
+export const { setActivePanel, togglePanel, setMarkerLocation, setRoute } =
   uiSlice.actions;
 
 export default uiSlice.reducer;

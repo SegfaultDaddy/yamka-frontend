@@ -1,0 +1,36 @@
+<svg 
+  xmlns="http://www.w3.org/2000/svg" 
+  viewBox="0 0 100 100" 
+  width="100" 
+  height="100"
+>
+  <!-- 
+    A modern, rounded rectangle background.
+    Matches your panel color.
+  -->
+  <rect 
+    width="100" 
+    height="100" 
+    rx="22" 
+    fill="#1f2937"
+  />
+
+  <!-- 
+    The main body of the map pin.
+    Uses your app's primary blue color.
+  -->
+  <path 
+    d="M 50 15 C 36.19 15, 25 26.19, 25 40 C 25 57.5, 46 79, 48.5 83.5 C 49.3 85, 50.7 85, 51.5 83.5 C 54 79, 75 57.5, 75 40 C 75 26.19, 63.81 15, 50 15 Z" 
+    fill="#3388ff"
+  />
+
+  <!-- 
+    The "pothole" cutout.
+    This is the key feature: an irregular, jagged "hole" 
+    instead of a standard circle.
+  -->
+  <path 
+    d="M 50 31 L 54 34 L 59 32 L 57 37 L 61 41 L 55.5 40 L 53 45 L 50 42 L 47 45 L 44.5 40 L 39 41 L 43 37 L 41 32 L 46 34 Z"
+    fill="white"
+  />
+</svg>

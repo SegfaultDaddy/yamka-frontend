@@ -1,26 +1,37 @@
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import StoreProvider from "@/lib/storeProvider";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import "../assets/styles/globals.css";
+import StoreProvider from "@/src/lib/storeProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from "@/src/lib/constants";
+
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
 });
 
 export const metadata = {
-  title: "Yamka",
-  description: "Discover road quality in your hometown",
+  title: {
+    template: `%s | Yamka`,
+    default: APP_NAME,
+  },
+  description: APP_DESCRIPTION,
+  icons: {
+    icon: "/favicon.ico",
+  },
+  metadataBase: new URL(SERVER_URL),
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable}`}>
         <StoreProvider>{children}</StoreProvider>
       </body>
     </html>

@@ -1,26 +1,114 @@
-.searchPanel {
+/* --- Base Panel Styles (Consistent with other panels) --- */
+.panel {
   position: absolute;
   top: 2%;
   left: 4.5%;
   z-index: 1001;
-
   width: 350px;
   height: 90%;
   background-color: #1f2937;
   color: white;
-  padding: 2.5rem 1rem 1.5rem 1rem;
   box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
-
+  border-radius: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  border-radius: 1.25rem;
   overflow: hidden;
+  font-family: var(--font-sans); /* Use your global font */
 }
 
-.searchInput {
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  flex-shrink: 0; /* Prevents header from shrinking */
+}
+
+.header h4 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 0;
+  border-radius: 50%;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.closeButton:hover {
+  color: white;
+  background-color: #374151;
+}
+
+/* This is now the scrollable main area */
+.content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  padding: 1.5rem;
+  border-top: 1px solid #374151;
+  background-color: #1f2937; /* Ensure bg for footer */
+  flex-shrink: 0; /* Prevents footer from shrinking */
+}
+
+/* --- New Google/Waze Style Input Group --- */
+
+.routeInputGroup {
+  position: relative; /* (CHANGED) Needs to be relative for absolute child */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.75rem; /* Gap between icons and inputs */
+  flex-shrink: 0; /* Prevent this block from shrinking */
+  padding-right: 2.75rem; /* (ADDED) Make space for the reverse button */
+}
+
+.routeIconColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  color: #9ca3af;
+}
+
+.iconStart {
+  color: #3388ff; /* Blue for start */
+}
+.iconEnd {
+  color: #ef4444; /* Red for end */
+}
+.iconDot {
+  color: #4b5563; /* Dotted line color */
+  line-height: 0.5;
+}
+
+.routeInputColumn {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0.5rem; /* Space between the two inputs */
+}
+
+.inputWrapper {
+  position: relative;
   width: 100%;
-  padding: 0.75rem 1rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.85rem 2.5rem 0.85rem 1rem; /* Padding for text and clear button */
   border-radius: 0.5rem;
   border: 1px solid #374151;
   background-color: #374151;
@@ -29,50 +117,145 @@
   box-sizing: border-box;
 }
 
-.searchInput::placeholder {
+.input::placeholder {
   color: #9ca3af;
 }
 
-.suggestionsList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  overflow-y: auto;
+.input:focus {
+  outline: none;
+  border-color: #3388ff;
+  box-shadow: 0 0 0 2px rgba(51, 136, 255, 0.5);
 }
 
-.suggestionItem {
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  border-radius: 0.5rem;
-  font-size: 0.9rem;
-  border-bottom: 1px solid #374151;
-}
-
-.suggestionItem:last-child {
-  border-bottom: none;
-}
-
-.suggestionItem:hover {
-  background-color: #374151;
-}
-
-.loading {
-  padding: 0.75rem 1rem;
-  color: #9ca3af;
-}
-
-.closeButton {
+.clearInputButton {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   color: #9ca3af;
   cursor: pointer;
   padding: 0.25rem;
   line-height: 0;
+  border-radius: 50%;
+}
+.clearInputButton:hover {
+  color: white;
+  background-color: #4b5563;
 }
 
-.closeButton:hover {
+.reverseButton {
+  position: absolute; /* (CHANGED) Revert to absolute */
+  right: 0; /* (CHANGED) Position in the padding of parent */
+  top: 50%; /* (CHANGED) Center vertically */
+  transform: translateY(-50%); /* (CHANGED) Center vertically */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #374151;
+  border: 1px solid #4b5563;
+  color: #9ca3af;
+  padding: 0.375rem;
+  width: 2.25rem; /* Make it a small circle/square */
+  height: 2.25rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 150ms ease;
+  /* margin: 0.25rem auto; (REMOVED) */
+  flex-shrink: 0;
+}
+.reverseButton:hover {
   color: white;
+  background-color: #4b5563;
+  transform: translateY(-50%) rotate(180deg); /* (CHANGED) Keep vertical transform */
+}
+
+/* --- Suggestions Area (Below Inputs) --- */
+
+.suggestionsArea {
+  padding-top: 1rem;
+  /* This area will grow if content is scrollable */
+  flex-grow: 1;
+}
+
+.locationButton {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  color: #9ca3af;
+  background: none;
+  border: none;
+  text-align: left;
+}
+.locationButton:hover {
+  background-color: #374151;
+  color: white;
+}
+.locationButton svg {
+  color: #3388ff;
+  flex-shrink: 0;
+}
+
+.suggestionsList {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 0;
+}
+
+.suggestionItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #374151;
+}
+.suggestionItem:last-child {
+  border-bottom: none;
+}
+.suggestionItem:hover {
+  background-color: #374151;
+}
+
+.loadingItem {
+  padding: 0.75rem 1rem;
+  color: #9ca3af;
+  font-style: italic;
+  text-align: center;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #374151;
+  margin: 0.5rem 0;
+}
+
+/* --- Footer Button --- */
+.getRouteButton {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: #3388ff;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+.getRouteButton:hover {
+  background-color: #2563eb;
+}
+.getRouteButton:disabled {
+  background-color: #374151;
+  color: #9ca3af;
+  cursor: not-allowed;
 }

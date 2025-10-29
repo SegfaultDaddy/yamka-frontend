@@ -1,7 +1,7 @@
 "use client";
-import { House, Search, Layers, Settings, User, LogOut } from "lucide-react";
+import { Search, Layers, Settings, User, Bell } from "lucide-react"; // Removed House, LogOut. Added Bell.
 import { useDispatch, useSelector } from "react-redux";
-import { togglePanel } from "@/lib/features/ui/uiSlice";
+import { togglePanel } from "@/src/lib/features/ui/uiSlice";
 import NavItem from "./nav-item";
 import styles from "./aside.module.css";
 
@@ -12,44 +12,48 @@ export default function Aside() {
   return (
     <aside id="sidebar" className={styles.sidebar}>
       <div className={styles.sidebarContent}>
-        {/* ... Logo ... */}
+        {/* Logo */}
         <div className={styles.logo}>
           <span style={{ fontWeight: 800, fontSize: "1.25rem" }}>Y</span>
         </div>
 
-        {/* Main navigation: */}
+        {/* Main navigation */}
         <nav className={styles.nav}>
           <NavItem
-            icon={House}
-            title="Home"
-            onClick={() => dispatch(togglePanel("home"))}
-            isActive={activePanel === "home"}
-          />
-          <NavItem
             icon={Search}
-            title="Search"
+            title="Search Route"
             onClick={() => dispatch(togglePanel("search"))}
             isActive={activePanel === "search"}
           />
           <NavItem
             icon={Layers}
-            title="Layers"
+            title="Map Layers"
             onClick={() => dispatch(togglePanel("layers"))}
             isActive={activePanel === "layers"}
-          />
-          <NavItem
-            icon={Settings}
-            title="Settings"
-            onClick={() => dispatch(togglePanel("settings"))}
-            isActive={activePanel === "settings"}
           />
         </nav>
       </div>
 
       {/* Bottom Navigation */}
       <div className={styles.bottomNav}>
-        <NavItem icon={User} title="User" />
-        <NavItem icon={LogOut} title="Logout" />
+        <NavItem
+          icon={Bell}
+          title="Notifications"
+          onClick={() => dispatch(togglePanel("notifications"))}
+          isActive={activePanel === "notifications"}
+        />
+        <NavItem
+          icon={User}
+          title="User Profile"
+          onClick={() => dispatch(togglePanel("user"))}
+          isActive={activePanel === "user"}
+        />
+        <NavItem
+          icon={Settings}
+          title="Settings"
+          onClick={() => dispatch(togglePanel("settings"))}
+          isActive={activePanel === "settings"}
+        />
       </div>
     </aside>
   );
