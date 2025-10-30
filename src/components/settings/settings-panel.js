@@ -1,13 +1,19 @@
 "use client";
 import { X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActivePanel, setLocale } from "@/src/lib/features/ui/uiSlice";
+import {
+  setActivePanel,
+  setLocale,
+  setUnits,
+} from "@/src/lib/features/ui/uiSlice";
 import styles from "../layers/layers-panel.module.css";
+import { current } from "@reduxjs/toolkit";
 
 export default function SettingsPanel() {
   const dispatch = useDispatch();
 
   const currentLocale = useSelector((state) => state.ui.locale);
+  const currentUnits = useSelector((state) => state.ui.units);
 
   const handleClose = () => {
     dispatch(setActivePanel(null));
@@ -15,6 +21,10 @@ export default function SettingsPanel() {
 
   const handleLanguageChange = (newLocale) => {
     dispatch(setLocale(newLocale));
+  };
+
+  const handleUnitsChange = (newUnits) => {
+    dispatch(setUnits(newUnits));
   };
 
   return (
@@ -53,8 +63,22 @@ export default function SettingsPanel() {
         <div className={styles.section}>
           <h5>Units</h5>
           <div className={styles.buttonGroup}>
-            <button className={styles.btn}>Metric</button>
-            <button className={styles.btn}>Imperial</button>
+            <button
+              className={`${styles.btn} ${
+                currentUnits === "metric" ? styles.active : ""
+              }`}
+              onClick={() => handleUnitsChange("metric")}
+            >
+              Metric
+            </button>
+            <button
+              className={`${styles.btn} ${
+                currentUnits === "imperial" ? styles.active : ""
+              }`}
+              onClick={() => handleUnitsChange("imperial")}
+            >
+              Imperial
+            </button>
           </div>
         </div>
       </div>

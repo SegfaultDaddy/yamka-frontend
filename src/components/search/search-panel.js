@@ -9,7 +9,7 @@ import {
   MapPin,
   Dot,
 } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setActivePanel, setRoute } from "@/src/lib/features/ui/uiSlice";
 import getRoute from "../directions-api/getRoute";
 import styles from "./search-panel.module.css";
@@ -17,6 +17,8 @@ import useDebounce from "./useDebounce";
 
 export default function SearchPanel() {
   const dispatch = useDispatch();
+
+  const currentUnits = useSelector((state) => state.ui.units);
 
   const [fromQuery, setFromQuery] = useState("");
   const [toQuery, setToQuery] = useState("");
@@ -247,7 +249,7 @@ export default function SearchPanel() {
                   onClick={() => handleSuggestionClick(item)}
                   className={styles.suggestionItem}
                 >
-                  {/* Potentially add general location icon here */}
+                  {/* Potentially add general location icon here for suggestions list items*/}
                   <span>{item.place_name}</span>
                 </li>
               ))}

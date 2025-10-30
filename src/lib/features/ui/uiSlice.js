@@ -5,6 +5,7 @@ const initialState = {
   markerLocation: null,
   route: null,
   locale: "en",
+  units: "metric",
 };
 
 export const uiSlice = createSlice({
@@ -27,6 +28,9 @@ export const uiSlice = createSlice({
     setLocale: (state, action) => {
       state.locale = action.payload;
     },
+    setUnits: (state, action) => {
+      state.units = action.payload;
+    },
   },
 });
 
@@ -36,6 +40,7 @@ export const {
   setMarkerLocation,
   setRoute,
   setLocale,
+  setUnits,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
