@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { getFromLocalStorage } from "../../utils";
 
 const initialState = {
   activePanel: null,
   markerLocation: null,
   route: null,
-  locale: "en",
-  units: "metric",
+  locale: getFromLocalStorage("userLocale", "en"),
+  units: getFromLocalStorage("userUnits", "metric"),
 };
 
 export const uiSlice = createSlice({
@@ -27,9 +28,15 @@ export const uiSlice = createSlice({
     },
     setLocale: (state, action) => {
       state.locale = action.payload;
+      if (typeof window !== undefined) {
+        localStorage.setItem("userLocale", JSON.stringify(action.payload));
+      }
     },
     setUnits: (state, action) => {
       state.units = action.payload;
+      if (typeof window !== undefined) {
+        localStorage.setItem("userUnits", JSON.stringify(action.payload));
+      }
     },
   },
 });
