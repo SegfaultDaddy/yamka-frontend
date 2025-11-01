@@ -1,4 +1,4 @@
-import { formatTitle } from "@/src/lib/utils";
+import { formatTitle } from "@/src/lib/utils/utils";
 import styles from "./articlesSlug.module.css";
 
 const fetchArticleBySlug = async (slug) => {

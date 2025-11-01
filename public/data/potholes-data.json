@@ -1,0 +1,39 @@
+{
+  "potholes": [
+    {
+      "id": "ph-001",
+      "coordinates": [24.032111, 49.841957],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-28T14:30:00Z"
+    },
+    {
+      "id": "ph-002",
+      "coordinates": [24.030111, 49.842957],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-27T09:15:00Z"
+    },
+    {
+      "id": "ph-003",
+      "coordinates": [24.033111, 49.843957],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-29T11:05:00Z"
+    },
+    {
+      "id": "ph-004",
+      "coordinates": [24.029111, 49.840957],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-28T18:20:00Z"
+    },
+    {
+      "id": "ph-005",
+      "coordinates": [24.035111, 49.844957],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-29T07:00:00Z"
+    }
+  ]
+}

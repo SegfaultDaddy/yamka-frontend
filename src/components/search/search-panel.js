@@ -8,17 +8,19 @@ import {
   Circle,
   MapPin,
   Dot,
+  Search,
 } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setActivePanel, setRoute } from "@/src/lib/features/ui/uiSlice";
-import getRoute from "../directions-api/getRoute";
+
+import getRoute from "@/src/lib/utils/getRoute";
+
 import styles from "./search-panel.module.css";
 import useDebounce from "./useDebounce";
+import { formatPlaceName } from "@/src/lib/utils/utils";
 
 export default function SearchPanel() {
   const dispatch = useDispatch();
-
-  const currentUnits = useSelector((state) => state.ui.units);
 
   const [fromQuery, setFromQuery] = useState("");
   const [toQuery, setToQuery] = useState("");
@@ -28,64 +30,60 @@ export default function SearchPanel() {
 
   const [activeInput, setActiveInput] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isRouteLoading, setIsRouteLoading] = useState(false);
+  const [isSuggestionsLoading, setIsSuggestionsLoading] = useState(false);
 
   const debouncedQuery = useDebounce(
     activeInput === "from" ? fromQuery : toQuery,
     300
   );
 
-  const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_DIRECTIONS_API_KEY;
-
-  // Effect to fetch suggestions
+  // Effect to fetch suggestions from /api/search
   useEffect(() => {
     if (
-      debouncedQuery.length < 1 ||
+      debouncedQuery.length < 2 ||
       !activeInput ||
       debouncedQuery === "My Current Location"
     ) {
       setSuggestions([]);
-      setIsLoading(false);
+      setIsSuggestionsLoading(false);
       return;
     }
 
     const fetchSuggestions = async () => {
-      setIsLoading(true);
+      setIsSuggestionsLoading(true);
       try {
         const response = await fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${debouncedQuery}.json?access_token=${MAPBOX_TOKEN}&autocomplete=true&limit=7`
+          `/api/search?q=${encodeURIComponent(debouncedQuery)}`
         );
         if (!response.ok) throw new Error("Failed to fetch");
         const data = await response.json();
-        setSuggestions(data.features || []);
+        setSuggestions(data.hits || []);
       } catch (error) {
         console.error("Error fetching geocoding data:", error);
         setSuggestions([]);
       }
-      setIsLoading(false);
+      setIsSuggestionsLoading(false);
     };
 
     fetchSuggestions();
-  }, [debouncedQuery, activeInput, MAPBOX_TOKEN]);
-
-  // Handlers
+  }, [debouncedQuery, activeInput]);
 
   const handleClose = () => {
     dispatch(setActivePanel(null));
   };
 
   const handleSuggestionClick = (suggestion) => {
-    const [lng, lat] = suggestion.center;
-    const placeName = suggestion.place_name;
+    const { lat, lng } = suggestion.point;
+    const placeName = formatPlaceName(suggestion);
 
     if (activeInput === "from") {
       setFromQuery(placeName);
-      setFromCoords([lng, lat]);
+      setFromCoords([lat, lng]);
     } else {
       setToQuery(placeName);
-      setToCoords([lng, lat]);
+      setToCoords([lat, lng]);
     }
-
     setSuggestions([]);
     setActiveInput(null);
   };
@@ -101,27 +99,21 @@ export default function SearchPanel() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const { longitude, latitude } = position.coords;
-          setFromCoords([longitude, latitude]);
+          const { latitude, longitude } = position.coords;
+          setFromCoords([latitude, longitude]);
           setFromQuery("My Current Location");
           setSuggestions([]);
           setActiveInput(null);
         },
-        (error) => {
-          console.error("Error getting location:", error);
-          // potentially implement a better error handling
-        }
+        (error) => console.error("Error getting location:", error)
       );
     }
   };
 
   const handleGetRoute = async () => {
-    if (!fromCoords || !toCoords) {
-      // potentially implement a better handling
-      console.log("Please select a valid 'From' and 'To' location.");
-      return;
-    }
+    if (!fromCoords || !toCoords) return;
 
+    setIsRouteLoading(true);
     const routeData = await getRoute(fromCoords, toCoords);
 
     if (routeData) {
@@ -130,9 +122,9 @@ export default function SearchPanel() {
     } else {
       console.log("Could not find a route.");
     }
+    setIsRouteLoading(false);
   };
 
-  // Helper to clear input
   const clearInput = (inputType) => {
     if (inputType === "from") {
       setFromQuery("");
@@ -145,9 +137,9 @@ export default function SearchPanel() {
     }
   };
 
-  const showSuggestions = activeInput && suggestions.length > 0 && !isLoading;
-  const showLoading = activeInput && isLoading;
-  const showLocationButton = activeInput === "from";
+  const showSuggestions =
+    activeInput && suggestions.length > 0 && !isSuggestionsLoading;
+  const showLoading = activeInput && isSuggestionsLoading;
 
   return (
     <div className={styles.panel}>
@@ -159,11 +151,8 @@ export default function SearchPanel() {
       </div>
       <hr className={styles.divider} />
 
-      {/* Main Content */}
       <div className={styles.content}>
-        {/* A/B Input Block */}
         <div className={styles.routeInputGroup}>
-          {/* Icon Column */}
           <div className={styles.routeIconColumn}>
             <Circle size={10} className={styles.iconStart} />
             <Dot size={10} className={styles.iconDot} />
@@ -171,8 +160,6 @@ export default function SearchPanel() {
             <Dot size={10} className={styles.iconDot} />
             <MapPin size={10} className={styles.iconEnd} />
           </div>
-
-          {/* Input Column */}
           <div className={styles.routeInputColumn}>
             <div className={styles.inputWrapper}>
               <input
@@ -192,7 +179,6 @@ export default function SearchPanel() {
                 </button>
               )}
             </div>
-
             <div className={styles.inputWrapper}>
               <input
                 type="text"
@@ -212,7 +198,6 @@ export default function SearchPanel() {
               )}
             </div>
           </div>
-
           <button
             className={styles.reverseButton}
             title="Reverse route"
@@ -224,9 +209,7 @@ export default function SearchPanel() {
 
         <hr className={styles.divider} />
 
-        {/* Suggestions Area */}
         <div className={styles.suggestionsArea}>
-          {/* "My Location" Button */}
           {activeInput === "from" && (
             <button
               onClick={handleGetLocation}
@@ -236,21 +219,17 @@ export default function SearchPanel() {
               <span>Your current location</span>
             </button>
           )}
-
-          {/* Loading Indicator */}
           {showLoading && <div className={styles.loadingItem}>Loading...</div>}
-
-          {/* Suggestions List */}
           {showSuggestions && (
             <ul className={styles.suggestionsList}>
               {suggestions.map((item) => (
                 <li
-                  key={item.id}
+                  key={item.osm_id || item.id}
                   onClick={() => handleSuggestionClick(item)}
                   className={styles.suggestionItem}
                 >
-                  {/* Potentially add general location icon here for suggestions list items*/}
-                  <span>{item.place_name}</span>
+                  <Search size={16} className={styles.suggestionIcon} />
+                  <span>{formatPlaceName(item)}</span>
                 </li>
               ))}
             </ul>
@@ -258,14 +237,13 @@ export default function SearchPanel() {
         </div>
       </div>
 
-      {/* Footer Button */}
       <div className={styles.footer}>
         <button
           className={styles.getRouteButton}
           onClick={handleGetRoute}
-          disabled={!fromCoords || !toCoords}
+          disabled={!fromCoords || !toCoords || isRouteLoading}
         >
-          Get Route
+          {isRouteLoading ? "Calculating..." : "Get Route"}
         </button>
       </div>
     </div>

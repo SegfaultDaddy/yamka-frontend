@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getFromLocalStorage } from "../../utils";
+import { getFromLocalStorage } from "../../utils/utils";
 
 const initialState = {
   activePanel: null,
@@ -29,19 +29,19 @@ export const uiSlice = createSlice({
     },
     setLocale: (state, action) => {
       state.locale = action.payload;
-      if (typeof window !== undefined) {
+      if (typeof window !== "undefined") {
         localStorage.setItem("userLocale", JSON.stringify(action.payload));
       }
     },
     setUnits: (state, action) => {
       state.units = action.payload;
-      if (typeof window !== undefined) {
+      if (typeof window !== "undefined") {
         localStorage.setItem("userUnits", JSON.stringify(action.payload));
       }
     },
     setMapStyle: (state, action) => {
       state.mapStyle = action.payload;
-      if (typeof window !== undefined) {
+      if (typeof window !== "undefined") {
         localStorage.setItem("userMapStyle", JSON.stringify(action.payload));
       }
     },

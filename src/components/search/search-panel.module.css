@@ -230,6 +230,46 @@
   margin: 0.5rem 0;
 }
 
+.profileSelector {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.profileButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 1px solid #374151;
+  background-color: #374151;
+  color: #9ca3af;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.profileButton:hover {
+  background-color: #4b5563;
+  color: white;
+}
+
+.profileButton.profileActive {
+  background-color: #3388ff;
+  border-color: #3388ff;
+  color: white;
+  box-shadow: 0 0 0 2px rgba(51, 136, 255, 0.5);
+}
+
+.suggestionIcon {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
 .getRouteButton {
   width: 100%;
   padding: 0.85rem 1rem;

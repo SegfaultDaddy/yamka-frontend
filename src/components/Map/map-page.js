@@ -32,7 +32,7 @@ export default function MapPage() {
   return (
     <main className={styles.main}>
       <Map
-        routeData={routeData ? routeData.geojson : null}
+        routeData={routeData}
         markerLocation={markerLocation}
         activePanel={activePanel}
       />
