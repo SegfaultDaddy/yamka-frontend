@@ -28,3 +28,7 @@ export const formatPlaceName = (hit) => {
     .filter(Boolean)
     .join(", ");
 };
+
+export const generateRandomKeySlug = () => {
+  return Math.random() * 100;
+};

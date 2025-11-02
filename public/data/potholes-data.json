@@ -2,38 +2,703 @@
   "potholes": [
     {
       "id": "ph-001",
-      "coordinates": [24.032111, 49.841957],
-      "severity": 5,
+      "coordinates": [24.01949284785517, 49.842789699474984],
+      "severity": 4,
       "status": "verified",
-      "reported_at": "2025-10-28T14:30:00Z"
+      "reported_at": "2025-10-15T08:22:11.123Z"
     },
     {
       "id": "ph-002",
-      "coordinates": [24.030111, 49.842957],
-      "severity": 3,
-      "status": "verified",
-      "reported_at": "2025-10-27T09:15:00Z"
+      "coordinates": [24.015871821153226, 49.84292581978027],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-30T14:45:01.582Z"
     },
     {
       "id": "ph-003",
-      "coordinates": [24.033111, 49.843957],
-      "severity": 1,
-      "status": "reported",
-      "reported_at": "2025-10-29T11:05:00Z"
+      "coordinates": [24.007221362089652, 49.84575663990424],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-11-01T03:11:30.912Z"
     },
     {
       "id": "ph-004",
-      "coordinates": [24.029111, 49.840957],
-      "severity": 4,
-      "status": "verified",
-      "reported_at": "2025-10-28T18:20:00Z"
+      "coordinates": [24.001764015118088, 49.847537525095184],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-25T19:05:55.341Z"
     },
     {
       "id": "ph-005",
-      "coordinates": [24.035111, 49.844957],
+      "coordinates": [24.001865061986873, 49.84977631761015],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-28T11:20:47.789Z"
+    },
+    {
+      "id": "ph-006",
+      "coordinates": [24.003866099620655, 49.850138099918006],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-29T23:59:01.002Z"
+    },
+    {
+      "id": "ph-007",
+      "coordinates": [24.003028719614, 49.85152797659548],
       "severity": 2,
       "status": "reported",
-      "reported_at": "2025-10-29T07:00:00Z"
+      "reported_at": "2025-10-12T01:15:33.476Z"
+    },
+    {
+      "id": "ph-008",
+      "coordinates": [24.002226743917323, 49.853716458616844],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-18T16:30:19.824Z"
+    },
+    {
+      "id": "ph-009",
+      "coordinates": [24.002248231759133, 49.85443893016762],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-07T09:09:05.119Z"
+    },
+    {
+      "id": "ph-010",
+      "coordinates": [24.003084995038762, 49.8551443130643],
+      "severity": 3,
+      "status": "reported",
+      "reported_at": "2025-10-22T05:40:27.567Z"
+    },
+    {
+      "id": "ph-011",
+      "coordinates": [24.01306487556753, 49.85503905507336],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-11-01T21:18:12.934Z"
+    },
+    {
+      "id": "ph-012",
+      "coordinates": [24.009649150625183, 49.85579204728857],
+      "severity": 2,
+      "status": "verified",
+      "reported_at": "2025-10-14T12:00:51.332Z"
+    },
+    {
+      "id": "ph-013",
+      "coordinates": [24.01490144469618, 49.85387474489952],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-26T07:33:45.621Z"
+    },
+    {
+      "id": "ph-014",
+      "coordinates": [24.016720133516237, 49.85534227977644],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-19T10:55:01.888Z"
+    },
+    {
+      "id": "ph-015",
+      "coordinates": [24.021591872492806, 49.85651909219031],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-29T18:01:22.455Z"
+    },
+    {
+      "id": "ph-016",
+      "coordinates": [24.025656854214763, 49.85921924003366],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-08T14:23:39.102Z"
+    },
+    {
+      "id": "ph-017",
+      "coordinates": [24.026747680249553, 49.8611843057481],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-17T03:47:15.756Z"
+    },
+    {
+      "id": "ph-018",
+      "coordinates": [24.02626289335603, 49.86356267558798],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-31T17:50:58.331Z"
+    },
+    {
+      "id": "ph-019",
+      "coordinates": [24.025317136169978, 49.86541936108469],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-27T08:12:44.901Z"
+    },
+    {
+      "id": "ph-020",
+      "coordinates": [24.02413125977321, 49.867748589795426],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-05T00:30:33.120Z"
+    },
+    {
+      "id": "ph-021",
+      "coordinates": [24.023760151029503, 49.86839960341369],
+      "severity": 3,
+      "status": "reported",
+      "reported_at": "2025-10-13T22:01:50.043Z"
+    },
+    {
+      "id": "ph-022",
+      "coordinates": [24.024045122599134, 49.86925336317515],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-11-02T10:04:17.228Z"
+    },
+    {
+      "id": "ph-023",
+      "coordinates": [24.020453051217057, 49.87032977594006],
+      "severity": 2,
+      "status": "verified",
+      "reported_at": "2025-10-16T13:13:00.671Z"
+    },
+    {
+      "id": "ph-024",
+      "coordinates": [24.017192274312155, 49.872210352748894],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-21T06:55:28.999Z"
+    },
+    {
+      "id": "ph-025",
+      "coordinates": [24.009451269552393, 49.86511492807582],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-09T02:44:56.321Z"
+    },
+    {
+      "id": "ph-026",
+      "coordinates": [24.006296333064874, 49.863924951798595],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-11T20:33:07.411Z"
+    },
+    {
+      "id": "ph-027",
+      "coordinates": [24.001958939641813, 49.861530289319944],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-11-01T09:22:15.876Z"
+    },
+    {
+      "id": "ph-028",
+      "coordinates": [23.995898140567576, 49.86224179539277],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-23T11:45:39.125Z"
+    },
+    {
+      "id": "ph-029",
+      "coordinates": [23.98531282222282, 49.857440083018645],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-20T18:19:54.602Z"
+    },
+    {
+      "id": "ph-030",
+      "coordinates": [23.986692430320012, 49.853742486500025],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-06T15:00:23.771Z"
+    },
+    {
+      "id": "ph-031",
+      "coordinates": [23.989197095825602, 49.852132928086505],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-24T04:22:01.444Z"
+    },
+    {
+      "id": "ph-032",
+      "coordinates": [23.993373471686933, 49.85030240282481],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-30T00:10:37.019Z"
+    },
+    {
+      "id": "ph-033",
+      "coordinates": [23.995594054499385, 49.8494061089533],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-10T11:39:18.156Z"
+    },
+    {
+      "id": "ph-034",
+      "coordinates": [23.99437310389396, 49.84985012580201],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-19T05:58:44.238Z"
+    },
+    {
+      "id": "ph-035",
+      "coordinates": [23.99344518143764, 49.848017349070965],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-04T07:16:03.901Z"
+    },
+    {
+      "id": "ph-036",
+      "coordinates": [23.991007172283467, 49.847081734038774],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-15T01:50:48.513Z"
+    },
+    {
+      "id": "ph-037",
+      "coordinates": [23.985270545630495, 49.84498342421179],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-11-02T11:03:10.287Z"
+    },
+    {
+      "id": "ph-038",
+      "coordinates": [23.98620335181478, 49.84532040435758],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-12T09:27:55.776Z"
+    },
+    {
+      "id": "ph-039",
+      "coordinates": [23.97899830359067, 49.84189037958345],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-27T13:40:33.190Z"
+    },
+    {
+      "id": "ph-040",
+      "coordinates": [23.977093620758897, 49.83836147282542],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-09T04:59:22.012Z"
+    },
+    {
+      "id": "ph-041",
+      "coordinates": [23.976876328643947, 49.83558295279461],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-18T23:14:00.341Z"
+    },
+    {
+      "id": "ph-042",
+      "coordinates": [23.977705093465183, 49.83370872659752],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-28T20:25:47.659Z"
+    },
+    {
+      "id": "ph-043",
+      "coordinates": [23.97797080055793, 49.83275998837462],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-05T12:33:17.915Z"
+    },
+    {
+      "id": "ph-044",
+      "coordinates": [23.982510612155888, 49.83318101703988],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-16T21:49:59.030Z"
+    },
+    {
+      "id": "ph-045",
+      "coordinates": [23.988009397337702, 49.834159434623366],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-07T06:11:08.221Z"
+    },
+    {
+      "id": "ph-046",
+      "coordinates": [23.991107732342204, 49.8346827580219],
+      "severity": 3,
+      "status": "reported",
+      "reported_at": "2025-10-22T17:38:14.577Z"
+    },
+    {
+      "id": "ph-047",
+      "coordinates": [23.994101682324306, 49.83521525671205],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-11-01T04:00:29.110Z"
+    },
+    {
+      "id": "ph-048",
+      "coordinates": [23.997028595515317, 49.835749161685754],
+      "severity": 2,
+      "status": "verified",
+      "reported_at": "2025-10-14T02:18:03.498Z"
+    },
+    {
+      "id": "ph-049",
+      "coordinates": [24.001261702914192, 49.836510874608614],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-25T15:29:41.875Z"
+    },
+    {
+      "id": "ph-050",
+      "coordinates": [24.001213920029706, 49.83595158046542],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-08T08:50:50.003Z"
+    },
+    {
+      "id": "ph-051",
+      "coordinates": [24.002019345675905, 49.83751149083858],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-17T20:07:31.214Z"
+    },
+    {
+      "id": "ph-052",
+      "coordinates": [24.001115326512135, 49.838446314624],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-30T10:11:55.760Z"
+    },
+    {
+      "id": "ph-053",
+      "coordinates": [24.000705063557643, 49.83885955993869],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-11T00:43:29.501Z"
+    },
+    {
+      "id": "ph-054",
+      "coordinates": [23.999981341281227, 49.83958793335632],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-20T09:33:14.688Z"
+    },
+    {
+      "id": "ph-055",
+      "coordinates": [23.999508847430256, 49.84011859851453],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-06T03:00:40.812Z"
+    },
+    {
+      "id": "ph-056",
+      "coordinates": [23.99911010871501, 49.84076965873297],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-23T16:16:09.117Z"
+    },
+    {
+      "id": "ph-057",
+      "coordinates": [23.998564184772583, 49.84165158410331],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-11-01T15:05:13.339Z"
+    },
+    {
+      "id": "ph-058",
+      "coordinates": [23.997946485490907, 49.8426697585672],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-13T07:22:48.553Z"
+    },
+    {
+      "id": "ph-059",
+      "coordinates": [23.9975085643661, 49.84347536462584],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-26T18:38:20.910Z"
+    },
+    {
+      "id": "ph-060",
+      "coordinates": [23.997261936812308, 49.84395486612129],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-08T20:55:11.765Z"
+    },
+    {
+      "id": "ph-061",
+      "coordinates": [23.998248411736615, 49.84398013373985],
+      "severity": 3,
+      "status": "reported",
+      "reported_at": "2025-10-18T12:01:37.498Z"
+    },
+    {
+      "id": "ph-062",
+      "coordinates": [24.000087680487617, 49.84380474646957],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-29T01:47:50.123Z"
+    },
+    {
+      "id": "ph-063",
+      "coordinates": [24.000696160347474, 49.84419713745066],
+      "severity": 2,
+      "status": "verified",
+      "reported_at": "2025-10-15T22:58:21.018Z"
+    },
+    {
+      "id": "ph-064",
+      "coordinates": [23.996764089662868, 49.84509932737609],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-28T03:09:07.444Z"
+    },
+    {
+      "id": "ph-065",
+      "coordinates": [23.996455591586766, 49.84575031154919],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-10T05:22:38.217Z"
+    },
+    {
+      "id": "ph-066",
+      "coordinates": [23.99611760266143, 49.84656326441167],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-19T14:40:12.796Z"
+    },
+    {
+      "id": "ph-067",
+      "coordinates": [23.99565584934463, 49.84777371827014],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-31T06:51:59.340Z"
+    },
+    {
+      "id": "ph-068",
+      "coordinates": [23.996801358796883, 49.84851533311482],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-12T16:33:04.991Z"
+    },
+    {
+      "id": "ph-069",
+      "coordinates": [23.997707180624918, 49.84629969832419],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-24T10:00:45.008Z"
+    },
+    {
+      "id": "ph-070",
+      "coordinates": [23.997875434525564, 49.84686595960899],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-07T13:17:29.623Z"
+    },
+    {
+      "id": "ph-071",
+      "coordinates": [23.998179674462946, 49.84729102278835],
+      "severity": 3,
+      "status": "reported",
+      "reported_at": "2025-10-21T02:28:16.470Z"
+    },
+    {
+      "id": "ph-072",
+      "coordinates": [23.998709789511476, 49.847895913942004],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-11-01T23:30:05.102Z"
+    },
+    {
+      "id": "ph-073",
+      "coordinates": [23.999000200355223, 49.84822287897641],
+      "severity": 2,
+      "status": "verified",
+      "reported_at": "2025-10-14T19:44:53.815Z"
+    },
+    {
+      "id": "ph-074",
+      "coordinates": [23.997584120020665, 49.84580726828945],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-27T00:55:19.231Z"
+    },
+    {
+      "id": "ph-075",
+      "coordinates": [24.00531759765176, 49.84542373840368],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-09T18:03:30.987Z"
+    },
+    {
+      "id": "ph-076",
+      "coordinates": [24.00506636921834, 49.844806925884654],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-19T08:14:47.533Z"
+    },
+    {
+      "id": "ph-077",
+      "coordinates": [24.004808170125855, 49.84403333345892],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-30T13:25:01.666Z"
+    },
+    {
+      "id": "ph-078",
+      "coordinates": [24.004767379194035, 49.84328566325368],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-11T11:34:11.101Z"
+    },
+    {
+      "id": "ph-079",
+      "coordinates": [24.00468366585521, 49.84259706946455],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-20T01:05:27.420Z"
+    },
+    {
+      "id": "ph-080",
+      "coordinates": [24.006891710258373, 49.8424662684958],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-05T09:12:44.876Z"
+    },
+    {
+      "id": "ph-081",
+      "coordinates": [24.00844748262732, 49.842421677175544],
+      "severity": 3,
+      "status": "reported",
+      "reported_at": "2025-10-22T21:59:58.219Z"
+    },
+    {
+      "id": "ph-082",
+      "coordinates": [24.009429347937218, 49.84210953677746],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-29T04:31:34.908Z"
+    },
+    {
+      "id": "ph-083",
+      "coordinates": [24.010881213267226, 49.84403309519634],
+      "severity": 2,
+      "status": "verified",
+      "reported_at": "2025-10-17T00:19:07.345Z"
+    },
+    {
+      "id": "ph-084",
+      "coordinates": [24.010367232173486, 49.84302535398012],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-26T05:07:55.012Z"
+    },
+    {
+      "id": "ph-085",
+      "coordinates": [24.01028718847288, 49.84199853854289],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-08T17:28:40.169Z"
+    },
+    {
+      "id": "ph-086",
+      "coordinates": [24.011890372055095, 49.84012531453306],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-16T07:44:19.337Z"
+    },
+    {
+      "id": "ph-087",
+      "coordinates": [24.016948380256782, 49.84211978491963],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-30T19:55:03.772Z"
+    },
+    {
+      "id": "ph-088",
+      "coordinates": [24.023007209145153, 49.84331382691064],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-13T18:06:51.996Z"
+    },
+    {
+      "id": "ph-089",
+      "coordinates": [24.025544654462863, 49.84641705931295],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-25T02:17:39.148Z"
+    },
+    {
+      "id": "ph-090",
+      "coordinates": [24.02558905850269, 49.849081216969104],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-06T12:29:10.513Z"
+    },
+    {
+      "id": "ph-091",
+      "coordinates": [24.024250669465136, 49.85143364828383],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-23T06:40:55.234Z"
+    },
+    {
+      "id": "ph-092",
+      "coordinates": [24.02298034146647, 49.85427205547554],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-11-02T13:02:41.876Z"
+    },
+    {
+      "id": "ph-093",
+      "coordinates": [24.010163321658485, 49.85911582490201],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-10T22:50:30.119Z"
+    },
+    {
+      "id": "ph-094",
+      "coordinates": [24.010973819659448, 49.85850849894736],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-21T15:00:15.601Z"
+    },
+    {
+      "id": "ph-095",
+      "coordinates": [24.01187594731682, 49.85752860708611],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-04T10:11:23.957Z"
+    },
+    {
+      "id": "ph-096",
+      "coordinates": [24.014116286873225, 49.856162072375575],
+      "severity": 3,
+      "status": "verified",
+      "reported_at": "2025-10-18T05:25:09.432Z"
+    },
+    {
+      "id": "ph-097",
+      "coordinates": [24.014448030902635, 49.85497637766971],
+      "severity": 5,
+      "status": "verified",
+      "reported_at": "2025-10-29T16:33:57.019Z"
+    },
+    {
+      "id": "ph-098",
+      "coordinates": [24.014448030902635, 49.85497637766971],
+      "severity": 2,
+      "status": "reported",
+      "reported_at": "2025-10-12T04:46:13.225Z"
+    },
+    {
+      "id": "ph-099",
+      "coordinates": [24.014448030902635, 49.85497637766971],
+      "severity": 4,
+      "status": "verified",
+      "reported_at": "2025-10-27T19:58:22.610Z"
+    },
+    {
+      "id": "ph-100",
+      "coordinates": [24.014448030902635, 49.85497637766971],
+      "severity": 1,
+      "status": "reported",
+      "reported_at": "2025-10-09T23:09:40.033Z"
     }
   ]
 }

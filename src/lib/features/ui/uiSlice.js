@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getFromLocalStorage } from "../../utils/utils";
+import { getFromLocalStorage } from "../../utils/utils.js";
 
 const initialState = {
   activePanel: null,
@@ -9,6 +9,10 @@ const initialState = {
   locale: getFromLocalStorage("userLocale", "en"),
   units: getFromLocalStorage("userUnits", "metric"),
   showTraffic: true,
+  showPotholes: true,
+  potholeSeverityFilter: 1,
+  isNavigating: false,
+  userLocation: null,
 };
 
 export const uiSlice = createSlice({
@@ -49,6 +53,18 @@ export const uiSlice = createSlice({
     setShowTraffic: (state, action) => {
       state.showTraffic = action.payload;
     },
+    setShowPotholes: (state, action) => {
+      state.showPotholes = action.payload;
+    },
+    setPotholeSeverityFilter: (state, action) => {
+      state.potholeSeverityFilter = action.payload;
+    },
+    setIsNavigating: (state, action) => {
+      state.isNavigating = action.payload;
+    },
+    setUserLocation: (state, action) => {
+      state.userLocation = action.payload;
+    },
   },
 });
 
@@ -61,6 +77,10 @@ export const {
   setUnits,
   setMapStyle,
   setShowTraffic,
+  setShowPotholes,
+  setPotholeSeverityFilter,
+  setIsNavigating,
+  setUserLocation,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

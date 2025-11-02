@@ -5,6 +5,8 @@ import {
   setActivePanel,
   setMapStyle,
   setShowTraffic,
+  setShowPotholes,
+  setPotholeSeverityFilter,
 } from "@/src/lib/features/ui/uiSlice";
 import styles from "./layers-panel.module.css";
 
@@ -13,6 +15,8 @@ export default function LayersPanel() {
 
   const currentStyle = useSelector((state) => state.ui.mapStyle);
   const showTraffic = useSelector((state) => state.ui.showTraffic);
+  const showPotholes = useSelector((state) => state.ui.showPotholes);
+  const severityFilter = useSelector((state) => state.ui.potholeSeverityFilter);
 
   const handleClose = () => {
     dispatch(setActivePanel(null));
@@ -66,7 +70,12 @@ export default function LayersPanel() {
         <div className={styles.section}>
           <h5>Data Toggles</h5>
           <label className={styles.toggle}>
-            <input type="checkbox" defaultChecked /> Show Potholes
+            <input
+              type="checkbox"
+              checked={showPotholes}
+              onChange={(e) => dispatch(setShowPotholes(e.target.checked))}
+            />{" "}
+            Show Potholes
           </label>
           <label className={styles.toggle}>
             <input
@@ -84,8 +93,12 @@ export default function LayersPanel() {
             type="range"
             min="1"
             max="5"
-            defaultValue="1"
+            value={severityFilter}
+            onChange={(e) =>
+              dispatch(setPotholeSeverityFilter(Number(e.target.value)))
+            }
             className={styles.slider}
+            disabled={!showPotholes}
           />
           <div className={styles.sliderLabels}>
             <span>All</span>

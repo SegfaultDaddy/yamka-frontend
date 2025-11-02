@@ -11,7 +11,11 @@ import {
   Search,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { setActivePanel, setRoute } from "@/src/lib/features/ui/uiSlice";
+import {
+  setActivePanel,
+  setRoute,
+  setIsNavigating,
+} from "@/src/lib/features/ui/uiSlice";
 
 import getRoute from "@/src/lib/utils/getRoute";
 
@@ -25,6 +29,7 @@ export default function SearchPanel() {
   const [fromQuery, setFromQuery] = useState("");
   const [toQuery, setToQuery] = useState("");
 
+  // Store coordinates as [lat, lng]
   const [fromCoords, setFromCoords] = useState(null);
   const [toCoords, setToCoords] = useState(null);
 
@@ -73,16 +78,17 @@ export default function SearchPanel() {
     dispatch(setActivePanel(null));
   };
 
+  // Handle suggestion click
   const handleSuggestionClick = (suggestion) => {
     const { lat, lng } = suggestion.point;
     const placeName = formatPlaceName(suggestion);
 
     if (activeInput === "from") {
       setFromQuery(placeName);
-      setFromCoords([lat, lng]);
+      setFromCoords([lat, lng]); // Store as [lat, lng]
     } else {
       setToQuery(placeName);
-      setToCoords([lat, lng]);
+      setToCoords([lat, lng]); // Store as [lat, lng]
     }
     setSuggestions([]);
     setActiveInput(null);
@@ -95,12 +101,13 @@ export default function SearchPanel() {
     setToCoords(fromCoords);
   };
 
+  // Handle get location
   const handleGetLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setFromCoords([latitude, longitude]);
+          setFromCoords([latitude, longitude]); // Store as [lat, lng]
           setFromQuery("My Current Location");
           setSuggestions([]);
           setActiveInput(null);
@@ -118,6 +125,13 @@ export default function SearchPanel() {
 
     if (routeData) {
       dispatch(setRoute(routeData));
+
+      if (fromQuery === "My Current Location") {
+        dispatch(setIsNavigating(true));
+      } else {
+        dispatch(setIsNavigating(false));
+      }
+
       handleClose();
     } else {
       console.log("Could not find a route.");
@@ -140,6 +154,9 @@ export default function SearchPanel() {
   const showSuggestions =
     activeInput && suggestions.length > 0 && !isSuggestionsLoading;
   const showLoading = activeInput && isSuggestionsLoading;
+
+  const buttonText =
+    fromQuery === "My Current Location" ? "Start Navigation" : "Get Route";
 
   return (
     <div className={styles.panel}>
@@ -207,8 +224,6 @@ export default function SearchPanel() {
           </button>
         </div>
 
-        <hr className={styles.divider} />
-
         <div className={styles.suggestionsArea}>
           {activeInput === "from" && (
             <button
@@ -243,7 +258,7 @@ export default function SearchPanel() {
           onClick={handleGetRoute}
           disabled={!fromCoords || !toCoords || isRouteLoading}
         >
-          {isRouteLoading ? "Calculating..." : "Get Route"}
+          {isRouteLoading ? "Loading..." : buttonText}
         </button>
       </div>
     </div>
