@@ -4,16 +4,16 @@ import { getFromLocalStorage } from "../../utils/utils.js";
 const initialState = {
   activePanel: null,
   markerLocation: null,
-  route: null,
   mapStyle: getFromLocalStorage("userMapStyle", "default"),
   locale: getFromLocalStorage("userLocale", "en"),
   units: getFromLocalStorage("userUnits", "metric"),
   showTraffic: true,
   showPotholes: true,
   potholeSeverityFilter: 1,
-  isNavigating: false,
+  route: getFromLocalStorage("currentRoute", null),
+  isNavigating: getFromLocalStorage("isNavigating", false),
   userLocation: null,
-  destinationCoords: null,
+  destinationCoords: getFromLocalStorage("destinationCoords", null),
   isReRouting: false,
 };
 
@@ -33,6 +33,11 @@ export const uiSlice = createSlice({
     },
     setRoute: (state, action) => {
       state.route = action.payload;
+      if (action.payload) {
+        localStorage.setItem("currentRoute", JSON.stringify(action.payload));
+      } else {
+        localStorage.removeItem("currentRoute");
+      }
     },
     setLocale: (state, action) => {
       state.locale = action.payload;
@@ -63,12 +68,21 @@ export const uiSlice = createSlice({
     },
     setIsNavigating: (state, action) => {
       state.isNavigating = action.payload;
+      localStorage.setItem("isNavigating", JSON.stringify(action.payload));
     },
     setUserLocation: (state, action) => {
       state.userLocation = action.payload;
     },
     setDestinationCoords: (state, action) => {
       state.destinationCoords = action.payload;
+      if (action.payload) {
+        localStorage.setItem(
+          "destinationCoords",
+          JSON.stringify(action.payload)
+        );
+      } else {
+        localStorage.removeItem("destinationCoords");
+      }
     },
     setIsReRouting: (state, action) => {
       state.isReRouting = action.payload;

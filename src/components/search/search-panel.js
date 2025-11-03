@@ -166,9 +166,6 @@ export default function SearchPanel() {
   const showLoading = activeInput && isSuggestionsLoading;
 
   const sameQuery = fromQuery === toQuery;
-  console.log(`From coords: ${fromQuery}`);
-  console.log(`To coords: ${toQuery}`);
-  console.log(`sameQuery: ${sameQuery}`);
 
   const buttonText =
     fromQuery === "My Current Location" ? "Start Navigation" : "Get Route";
