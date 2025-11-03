@@ -103,16 +103,21 @@ export default function SearchPanel() {
 
   // Handle get location
   const handleGetLocation = () => {
+    setFromQuery("My Current Location");
+    setFromCoords(null);
+    setSuggestions([]);
+    setActiveInput(null);
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
           setFromCoords([latitude, longitude]); // Store as [lat, lng]
-          setFromQuery("My Current Location");
-          setSuggestions([]);
-          setActiveInput(null);
         },
-        (error) => console.error("Error getting location:", error)
+        (error) => {
+          console.error("Error getting location:", error);
+          setFromQuery("");
+        }
       );
     }
   };

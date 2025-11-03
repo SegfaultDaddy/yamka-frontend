@@ -158,15 +158,27 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
       });
       newRoute.addTo(map.current);
       routeLayer.current = newRoute;
-      const distanceVal = (routeData.distance / 1000).toFixed(1);
+      const distanceValueKm = (routeData.distance / 1000).toFixed(1);
       const duration = Math.round(routeData.time / 60000);
+
       newRoute.bindPopup(
-        `<b>Route Info</b><br>Distance: ${distanceVal} km<br>Duration: ${duration} min`
+        `<b>Route Info</b><br>Distance: ${distanceValueKm} km<br>Duration: ${duration} min`
       );
 
       setShowArrivalModal(false);
 
-      if (!isNavigating) {
+      const hasValidDistance = distanceValueKm > 0.01;
+      // if user enter pointA and pointB as the same addresses, we just setView to that coords and GH returns a point
+      if (!hasValidDistance) {
+        map.current.setView(
+          [
+            routeData.points.coordinates[0][1], // lat
+            routeData.points.coordinates[0][0], // lng
+          ],
+          18
+        );
+      }
+      if (!isNavigating && hasValidDistance) {
         map.current.fitBounds(newRoute.getBounds());
       }
     }
