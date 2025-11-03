@@ -15,6 +15,8 @@ import {
   setActivePanel,
   setRoute,
   setIsNavigating,
+  setDestinationCoords,
+  setIsReRouting,
 } from "@/src/lib/features/ui/uiSlice";
 
 import getRoute from "@/src/lib/utils/getRoute";
@@ -131,6 +133,9 @@ export default function SearchPanel() {
     if (routeData) {
       dispatch(setRoute(routeData));
 
+      dispatch(setDestinationCoords(toCoords));
+      dispatch(setIsReRouting(false));
+
       if (fromQuery === "My Current Location") {
         dispatch(setIsNavigating(true));
       } else {
@@ -159,6 +164,11 @@ export default function SearchPanel() {
   const showSuggestions =
     activeInput && suggestions.length > 0 && !isSuggestionsLoading;
   const showLoading = activeInput && isSuggestionsLoading;
+
+  const sameQuery = fromQuery === toQuery;
+  console.log(`From coords: ${fromQuery}`);
+  console.log(`To coords: ${toQuery}`);
+  console.log(`sameQuery: ${sameQuery}`);
 
   const buttonText =
     fromQuery === "My Current Location" ? "Start Navigation" : "Get Route";
@@ -261,7 +271,7 @@ export default function SearchPanel() {
         <button
           className={styles.getRouteButton}
           onClick={handleGetRoute}
-          disabled={!fromCoords || !toCoords || isRouteLoading}
+          disabled={!fromCoords || !toCoords || isRouteLoading || sameQuery}
         >
           {isRouteLoading ? "Loading..." : buttonText}
         </button>

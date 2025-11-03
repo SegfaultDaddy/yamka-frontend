@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MaptilerLayer } from "@maptiler/leaflet-maptilersdk";
@@ -15,11 +15,14 @@ import {
   setIsNavigating,
   setUserLocation,
   setRoute,
+  setIsReRouting,
 } from "@/src/lib/features/ui/uiSlice";
 import ArrivalModal from "./arrival-modal";
 import { Locate } from "lucide-react";
 
 import { distance } from "@turf/distance";
+import pointToLineDistance from "@turf/point-to-line-distance";
+import getRoute from "@/src/lib/utils/getRoute";
 
 const userLocationIcon = L.divIcon({
   html: `<div class="${styles.userPuckPulse}"></div><div class="${styles.userPuck}"></div>`,
@@ -51,6 +54,8 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
   const severityFilter = useSelector((state) => state.ui.potholeSeverityFilter);
   const isNavigating = useSelector((state) => state.ui.isNavigating);
   const userLocation = useSelector((state) => state.ui.userLocation);
+  const destinationCoords = useSelector((state) => state.ui.destinationCoords);
+  const isReRouting = useSelector((state) => state.ui.isReRouting);
 
   const {
     data: potholes,
@@ -167,9 +172,9 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
 
       setShowArrivalModal(false);
 
-      const hasValidDistance = distanceValueKm > 0.01;
+      const hasSufficientDistance = distanceValueKm > 0.01;
       // if user enter pointA and pointB as the same addresses, we just setView to that coords and GH returns a point
-      if (!hasValidDistance) {
+      if (!hasSufficientDistance) {
         map.current.setView(
           [
             routeData.points.coordinates[0][1], // lat
@@ -178,7 +183,7 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
           18
         );
       }
-      if (!isNavigating && hasValidDistance) {
+      if (!isNavigating && hasSufficientDistance) {
         map.current.fitBounds(newRoute.getBounds());
       }
     }
@@ -256,6 +261,32 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
     }
   }, [potholes, showPotholes, severityFilter, isLoadingPotholes, potholeError]);
 
+  const handleReroute = useCallback(async () => {
+    dispatch(setIsReRouting(true));
+    console.log("User is off-route. Re-routing...");
+
+    const fromCoords = [userLocation.lat, userLocation.lng];
+    const toCoords = destinationCoords;
+
+    if (!fromCoords || !toCoords) {
+      console.error("Missing coords for re-route.");
+      dispatch(setIsReRouting(false));
+      return;
+    }
+
+    const newRouteData = await getRoute(fromCoords, toCoords);
+
+    if (newRouteData) {
+      dispatch(setRoute(newRouteData));
+    } else {
+      console.error("Failed to fetch new route.");
+    }
+
+    setTimeout(() => {
+      dispatch(setIsReRouting(false));
+    }, 3000);
+  }, [dispatch, userLocation, destinationCoords]);
+
   // Effect to draw puck and handle navigation
   useEffect(() => {
     if (!map.current) return;
@@ -277,33 +308,66 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
       }
     }
 
+    // Handle navigation logic (follow, re-route, and arrival)
     if (isNavigating && userLocation) {
+      // Follow user
       map.current.setView([userLocation.lat, userLocation.lng], 17);
 
-      if (routeData && routeData.points) {
-        if (typeof distance === "undefined") {
-          console.error("Turf 'distance' function is not loaded!");
+      if (
+        routeData &&
+        routeData.points &&
+        routeData.points.type === "LineString"
+      ) {
+        if (
+          typeof distance === "undefined" ||
+          typeof pointToLineDistance === "undefined"
+        ) {
+          console.error("Turf.js functions are not loaded!");
           return;
         }
 
-        const routeCoords = routeData.points.coordinates;
-        const destination = routeCoords[routeCoords.length - 1]; // [lng, lat]
-        const userPoint = [userLocation.lng, userLocation.lat]; // [lng, lat]
+        // ReRouting logic
+        if (!isReRouting) {
+          const userPoint = [userLocation.lng, userLocation.lat];
+          const routeLine = routeData.points;
 
-        const distanceToDest = distance(userPoint, destination, {
-          units: "meters",
-        });
+          const distanceToRoute = pointToLineDistance(userPoint, routeLine, {
+            units: "meters",
+          });
 
-        console.log(`Distance to destination: ${distanceToDest} meters`);
+          const rerouteTolerance = 50; // 50 meters
 
-        if (distanceToDest < 50 && !showArrivalModal) {
-          console.log("User has arrived at destination!");
-          setShowArrivalModal(true);
-          dispatch(setIsNavigating(false));
+          if (distanceToRoute > rerouteTolerance) {
+            handleReroute();
+          } else {
+            const routeCoords = routeData.points.coordinates;
+            const destination = routeCoords[routeCoords.length - 1];
+
+            const distanceToDest = distance(userPoint, destination, {
+              units: "meters",
+            });
+
+            console.log(`Distance to destination: ${distanceToDest} meters`);
+
+            if (distanceToDest < 50 && !showArrivalModal) {
+              console.log("User has arrived at destination!");
+              setShowArrivalModal(true);
+              dispatch(setIsNavigating(false));
+            }
+          }
         }
       }
     }
-  }, [userLocation, isNavigating, routeData, dispatch, showArrivalModal]);
+  }, [
+    userLocation,
+    isNavigating,
+    routeData,
+    dispatch,
+    showArrivalModal,
+    destinationCoords,
+    isReRouting,
+    handleReroute,
+  ]);
 
   // Handler for the "Find My Location" button
   const handleFindMe = () => {

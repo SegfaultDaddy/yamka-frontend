@@ -13,6 +13,8 @@ const initialState = {
   potholeSeverityFilter: 1,
   isNavigating: false,
   userLocation: null,
+  destinationCoords: null,
+  isReRouting: false,
 };
 
 export const uiSlice = createSlice({
@@ -65,6 +67,12 @@ export const uiSlice = createSlice({
     setUserLocation: (state, action) => {
       state.userLocation = action.payload;
     },
+    setDestinationCoords: (state, action) => {
+      state.destinationCoords = action.payload;
+    },
+    setIsReRouting: (state, action) => {
+      state.isReRouting = action.payload;
+    },
   },
 });
 
@@ -81,6 +89,8 @@ export const {
   setPotholeSeverityFilter,
   setIsNavigating,
   setUserLocation,
+  setDestinationCoords,
+  setIsReRouting,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
