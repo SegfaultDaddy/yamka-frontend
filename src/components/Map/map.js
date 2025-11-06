@@ -3,7 +3,10 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { MaptilerLayer } from "@maptiler/leaflet-maptilersdk";
+import {
+  MaptilerLayer,
+  NavigationControl,
+} from "@maptiler/leaflet-maptilersdk";
 
 import styles from "./map.module.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,7 +21,7 @@ import {
   setIsReRouting,
 } from "@/src/lib/features/ui/uiSlice";
 import ArrivalModal from "./arrival-modal";
-import { Locate } from "lucide-react";
+import { Locate, Minus, Plus } from "lucide-react";
 
 import { distance } from "@turf/distance";
 import pointToLineDistance from "@turf/point-to-line-distance";
@@ -71,7 +74,6 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
       zoom: zoom,
       zoomControl: false,
     });
-    L.control.zoom({ position: "topright" }).addTo(map.current);
     const initialStyleUrl = MAP_STYLES[mapStyle] || MAP_STYLES.default;
     const mtLayer = new MaptilerLayer({
       style: initialStyleUrl,
@@ -79,6 +81,25 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
     }).addTo(map.current);
     mapLayer.current = mtLayer;
     potholesLayer.current = L.featureGroup().addTo(map.current);
+
+    const maplibreMap = mtLayer.map;
+    if (maplibreMap) {
+      maplibreMap.addControl(
+        new maplibregl.NavigationControl({
+          showZoom: false,
+          showCompass: true,
+          visualizePitch: true,
+        }),
+        "top-right"
+      );
+
+      // Enable rotation & pitch gestures
+      maplibreMap.dragRotate.enable();
+      maplibreMap.touchZoomRotate.enable();
+      maplibreMap.touchZoomRotate.enableRotation();
+      maplibreMap.touchPitch.enable();
+      maplibreMap.setMaxPitch(60);
+    }
 
     if ("geolocation" in navigator) {
       console.log("Geolocation is available.");
@@ -382,6 +403,19 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
     <div className={styles.mapWrap}>
       {showArrivalModal && <ArrivalModal />}
       <div ref={mapContainer} className={styles.map}></div>
+      <button
+        className={styles.zoomButton + " " + styles.zoomIn}
+        onClick={() => map.current.zoomIn()}
+      >
+        <Plus size={20} />
+      </button>
+
+      <button
+        className={styles.zoomButton + " " + styles.zoomOut}
+        onClick={() => map.current.zoomOut()}
+      >
+        <Minus size={20} />
+      </button>
       <button className={styles.locateButton} onClick={handleFindMe}>
         <Locate size={20} />
       </button>

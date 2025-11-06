@@ -1,13 +1,15 @@
 .panel {
   position: absolute;
   top: 2%;
-  left: 4.5%;
+  left: 3.75rem;
   z-index: 1001;
-  width: 350px;
+
+  width: 80%;
   height: 90%;
   background-color: #1f2937;
   color: white;
   box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+
   border-radius: 1.25rem;
   display: flex;
   flex-direction: column;
@@ -289,4 +291,22 @@
   background-color: #374151;
   color: #9ca3af;
   cursor: not-allowed;
+}
+
+@media (min-width: 440px) {
+  .panel {
+    width: 350px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .panel {
+    left: 4.75rem;
+  }
+}
+
+@media (min-width: 2400px) {
+  .panel {
+    left: 6rem;
+  }
 }

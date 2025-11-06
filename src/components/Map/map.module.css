@@ -1,7 +1,7 @@
 .mapWrap {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
 }
 
 .map {
@@ -12,16 +12,16 @@
 
 .locateButton {
   position: absolute;
-  bottom: 3rem;
-  right: 1.5rem;
+  bottom: 2.5rem;
+  right: 1rem;
   z-index: 1000;
 
   background-color: #ffffff;
   color: #1f2937;
   border: none;
   border-radius: 50%;
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 3rem;
+  height: 3rem;
 
   display: flex;
   align-items: center;
@@ -81,5 +81,66 @@
   100% {
     transform: translate(-50%, -50%) scale(1);
     opacity: 0;
+  }
+}
+
+.zoomButton {
+  position: absolute;
+  right: 1rem;
+  z-index: 1000;
+
+  background-color: #ffffff;
+  color: #1f2937;
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5rem;
+
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: all 150ms ease;
+}
+
+.zoomButton:hover {
+  background-color: #f3f4f6;
+}
+
+.zoomIn {
+  top: 1rem;
+}
+
+.zoomOut {
+  top: 4.5rem;
+}
+
+.map :global(.maptlibregl-ctrl-zoom) {
+  display: none;
+}
+
+@media (min-width: 1920px) {
+  .zoomButton {
+    width: 3.5rem;
+    height: 3.5rem;
+    right: 1.5rem;
+  }
+
+  .zoomIn {
+    top: 1.5rem;
+  }
+
+  .zoomOut {
+    top: 5.5rem;
+  }
+
+  .locateButton {
+    width: 3.5rem;
+    height: 3.5rem;
+    bottom: 3rem;
+    right: 1.5rem;
   }
 }

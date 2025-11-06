@@ -1,10 +1,10 @@
 .panel {
   position: absolute;
   top: 2%;
-  left: 4.5%;
+  left: 3.75rem;
   z-index: 1001;
 
-  width: 350px;
+  width: 80%;
   height: 90%;
   background-color: #1f2937;
   color: white;
@@ -119,4 +119,22 @@
   border: none;
   border-top: 1px solid #374151;
   margin: 0.5rem 0;
+}
+
+@media (min-width: 440px) {
+  .panel {
+    width: 350px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .panel {
+    left: 4.75rem;
+  }
+}
+
+@media (min-width: 2400px) {
+  .panel {
+    left: 6rem;
+  }
 }
