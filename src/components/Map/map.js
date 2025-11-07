@@ -19,11 +19,12 @@ import {
   setUserLocation,
   setRoute,
   setIsReRouting,
+  setDestinationCoords,
 } from "@/src/lib/features/ui/uiSlice";
 
 import ArrivalModal from "./arrival-modal";
 import ResumeNavigationModal from "./resume-navigation-modal";
-import { Locate, Minus, Plus } from "lucide-react";
+import { Locate, Minus, Plus, RouteOff } from "lucide-react";
 
 import { distance } from "@turf/distance";
 import pointToLineDistance from "@turf/point-to-line-distance";
@@ -438,6 +439,13 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
     }
   };
 
+  // Handler for the "Clear Route" button
+  const handleClearRoute = () => {
+    dispatch(setRoute(null));
+    dispatch(setIsNavigating(false));
+    dispatch(setDestinationCoords(null));
+  };
+
   return (
     <div className={styles.mapWrap}>
       {showArrivalModal && <ArrivalModal />}
@@ -445,6 +453,15 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
         <ResumeNavigationModal onClose={() => setShowResumeModal(false)} />
       )}
       <div ref={mapContainer} className={styles.map}></div>
+      {routeData && !showArrivalModal && (
+        <button
+          className={styles.clearRouteButton}
+          onClick={handleClearRoute}
+          title="Clear Route"
+        >
+          <RouteOff size={20} />
+        </button>
+      )}
       <button
         className={styles.zoomButton + " " + styles.zoomIn}
         onClick={() => map.current.zoomIn()}

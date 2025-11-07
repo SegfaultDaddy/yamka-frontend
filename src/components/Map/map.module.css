@@ -10,32 +10,6 @@
   height: 100%;
 }
 
-.locateButton {
-  position: absolute;
-  bottom: 2.5rem;
-  right: 1rem;
-  z-index: 1000;
-
-  background-color: #ffffff;
-  color: #1f2937;
-  border: none;
-  border-radius: 50%;
-  width: 3rem;
-  height: 3rem;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-  transition: all 150ms ease;
-}
-
-.locateButton:hover {
-  background-color: #f3f4f6;
-}
-
 .userPuckContainer {
   background: transparent;
   border: none;
@@ -82,6 +56,58 @@
     transform: translate(-50%, -50%) scale(1);
     opacity: 0;
   }
+}
+
+.locateButton {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 1rem;
+  z-index: 1000;
+
+  background-color: #ffffff;
+  color: #1f2937;
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: all 150ms ease;
+}
+
+.locateButton:hover {
+  background-color: #f3f4f6;
+}
+
+.clearRouteButton {
+  position: absolute;
+  bottom: 6rem;
+  right: 1rem;
+  z-index: 1000;
+
+  background-color: #ffffff;
+  color: #ef4444;
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: all 150ms ease;
+}
+
+.clearRouteButton:hover {
+  background-color: #f3f4f6;
 }
 
 .zoomButton {
@@ -141,6 +167,13 @@
     width: 3.5rem;
     height: 3.5rem;
     bottom: 3rem;
+    right: 1.5rem;
+  }
+
+  .clearRouteButton {
+    width: 3.5rem;
+    height: 3.5rem;
+    bottom: 7rem;
     right: 1.5rem;
   }
 }
