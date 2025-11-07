@@ -249,9 +249,9 @@ export default function SearchPanel() {
           {showLoading && <div className={styles.loadingItem}>Loading...</div>}
           {showSuggestions && (
             <ul className={styles.suggestionsList}>
-              {suggestions.map((item) => (
+              {suggestions.map((item, index) => (
                 <li
-                  key={item.osm_id || item.id}
+                  key={`${item.osm_id || item.id}-${index}`}
                   onClick={() => handleSuggestionClick(item)}
                   className={styles.suggestionItem}
                 >
