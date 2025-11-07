@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import {
   setRoute,
   setIsNavigating,
-  setUserLocation,
+  setDestinationCoords,
 } from "@/src/lib/features/ui/uiSlice";
 
 export default function ArrivalModal() {
@@ -13,7 +13,7 @@ export default function ArrivalModal() {
   const handleFinish = () => {
     dispatch(setRoute(null));
     dispatch(setIsNavigating(false));
-    dispatch(setUserLocation(null));
+    dispatch(setDestinationCoords(null));
   };
 
   return (

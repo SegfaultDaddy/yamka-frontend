@@ -13,19 +13,20 @@ import { useSelector, useDispatch } from "react-redux";
 import { MAP_STYLES } from "./map-styles";
 import { useGetPotholesQuery } from "@/src/lib/features/api/apiSlice";
 import { getSeverityColor } from "@/src/lib/utils/utils";
-
+import getRoute from "@/src/lib/utils/getRoute";
 import {
   setIsNavigating,
   setUserLocation,
   setRoute,
   setIsReRouting,
 } from "@/src/lib/features/ui/uiSlice";
+
 import ArrivalModal from "./arrival-modal";
+import ResumeNavigationModal from "./resume-navigation-modal";
 import { Locate, Minus, Plus } from "lucide-react";
 
 import { distance } from "@turf/distance";
 import pointToLineDistance from "@turf/point-to-line-distance";
-import getRoute from "@/src/lib/utils/getRoute";
 
 const userLocationIcon = L.divIcon({
   html: `<div class="${styles.userPuckPulse}"></div><div class="${styles.userPuck}"></div>`,
@@ -44,8 +45,11 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
   const potholesLayer = useRef(null);
   const userPuckMarker = useRef(null);
   const watchId = useRef(null);
+  const hasCheckedOnLoad = useRef(false);
 
   const [showArrivalModal, setShowArrivalModal] = useState(false);
+  const [showResumeModal, setShowResumeModal] = useState(false);
+
   const center = { lat: 49.842957, lng: 24.031111 };
   const [zoom] = useState(14);
   const [hasCenteredOnUser, setHasCenteredOnUser] = useState(false);
@@ -155,6 +159,38 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
     hasCenteredOnUser,
   ]);
 
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden === false && !showArrivalModal && !showResumeModal) {
+        const appIsInNavigation =
+          JSON.parse(localStorage.getItem("isNavigating")) === true;
+        const appHasRoute = localStorage.getItem("currentRoute") !== null;
+
+        if (appIsInNavigation && appHasRoute) {
+          if (!hasCheckedOnLoad.current) {
+            console.log(
+              "Page loaded into active navigation. Asking to resume."
+            );
+            setShowResumeModal(true);
+            hasCheckedOnLoad.current = true;
+          }
+        }
+      }
+
+      if (document.hidden === true) {
+        hasCheckedOnLoad.current = false;
+      }
+    };
+
+    handleVisibilityChange();
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [showArrivalModal, showResumeModal]);
+
   // Effect to update map language
   useEffect(() => {
     if (!mapLayer.current) return;
@@ -191,7 +227,9 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
         `<b>Route Info</b><br>Distance: ${distanceValueKm} km<br>Duration: ${duration} min`
       );
 
-      setShowArrivalModal(false);
+      if (!showResumeModal) {
+        setShowArrivalModal(false);
+      }
 
       const hasSufficientDistance = distanceValueKm > 0.01;
       // if user enter pointA and pointB as the same addresses, we just setView to that coords and GH returns a point
@@ -211,7 +249,7 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
     if (!routeData) {
       setShowArrivalModal(false);
     }
-  }, [routeData, isNavigating]);
+  }, [routeData, isNavigating, showResumeModal]);
 
   // Effect for drawing the single-click marker
   useEffect(() => {
@@ -330,7 +368,7 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
     }
 
     // Handle navigation logic (follow, re-route, and arrival)
-    if (isNavigating && userLocation) {
+    if (isNavigating && userLocation && !showResumeModal) {
       // Follow user
       map.current.setView([userLocation.lat, userLocation.lng], 17);
 
@@ -388,6 +426,7 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
     destinationCoords,
     isReRouting,
     handleReroute,
+    showResumeModal,
   ]);
 
   // Handler for the "Find My Location" button
@@ -402,6 +441,9 @@ const Map = ({ routeData, markerLocation, activePanel }) => {
   return (
     <div className={styles.mapWrap}>
       {showArrivalModal && <ArrivalModal />}
+      {showResumeModal && (
+        <ResumeNavigationModal onClose={() => setShowResumeModal(false)} />
+      )}
       <div ref={mapContainer} className={styles.map}></div>
       <button
         className={styles.zoomButton + " " + styles.zoomIn}
