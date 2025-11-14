@@ -3,17 +3,15 @@
 import React, { useState, useEffect } from "react";
 import styles from "./current-maneuver.module.css";
 import { useSelector, useDispatch } from "react-redux";
-import { distance } from "@turf/distance";
-import { formatDistance, getTurnIcon } from "@/src/lib/utils/utils";
+import { getTurnIcon } from "@/src/lib/utils/utils";
 import { togglePanel } from "@/src/lib/features/ui/uiSlice";
 import { translateInstruction } from "@/src/lib/utils/instructionTranslator";
 
 export default function CurrentManeuver() {
   const dispatch = useDispatch();
-  const { route, isNavigating, currentInstructionIndex, userLocation } =
-    useSelector((state) => state.ui);
-
-  const [displayDistance, setDisplayDistance] = useState("...");
+  const { route, isNavigating, currentInstructionIndex } = useSelector(
+    (state) => state.ui
+  );
 
   const [isClient, setIsClient] = useState(false);
 
@@ -22,29 +20,6 @@ export default function CurrentManeuver() {
   }, []);
 
   const instruction = route?.instructions?.[currentInstructionIndex];
-
-  useEffect(() => {
-    if (
-      !isNavigating ||
-      !userLocation ||
-      !instruction ||
-      instruction.sign === 4
-    ) {
-      setDisplayDistance("");
-      return;
-    }
-
-    if (instruction.points && instruction.points.length > 0) {
-      const userPoint = [userLocation.lng, userLocation.lat];
-      const maneuverPoint = instruction.points[0]; // [lng, lat]
-
-      const distInMeters = distance(userPoint, maneuverPoint, {
-        units: "meters",
-      });
-
-      setDisplayDistance(formatDistance(distInMeters));
-    }
-  }, [userLocation, instruction, isNavigating]);
 
   const toggleInstructionList = () => {
     dispatch(togglePanel("instructions"));
@@ -59,7 +34,6 @@ export default function CurrentManeuver() {
       <div className={styles.maneuver}>
         <span className={styles.icon}>{getTurnIcon(instruction.sign)}</span>
         <div className={styles.details}>
-          <span className={styles.distance}>{displayDistance}</span>
           <span className={styles.street}>
             {translateInstruction(instruction)}
           </span>
