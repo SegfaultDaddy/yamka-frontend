@@ -102,15 +102,6 @@ const Map = ({ routeData }) => {
     mapLayer.current = mtLayer;
     potholesLayer.current = L.featureGroup().addTo(map.current);
 
-    // potentially removed or need to be fixed
-    const maplibreMap = mtLayer.map;
-    if (maplibreMap) {
-      maplibreMap.dragRotate.enable();
-      maplibreMap.touchZoomRotate.enable();
-      maplibreMap.touchPitch.enable();
-      maplibreMap.setMaxPitch(60);
-    }
-
     if ("geolocation" in navigator) {
       console.log("Geolocation is available.");
 
