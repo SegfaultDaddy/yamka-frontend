@@ -6,3 +6,4 @@ borders/inputs: #374151
 primary text: white / #ecf0f1
 muted text: #64748b
 error text: #ef4444
+font-family: var(--font-sans);
