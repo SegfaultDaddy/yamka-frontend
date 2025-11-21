@@ -28,16 +28,15 @@ export default function UserProfilePanel() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // Get User Data
   const { data: session, update } = useSession();
   const user = session?.user;
 
   const [isEditing, setIsEditing] = useState(false);
+  const [errors, setErrors] = useState({});
 
   // handlers
   const handleClose = () => dispatch(setActivePanel(null));
 
-  // Logout Logic
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/" });
     dispatch(setActivePanel(null));
@@ -48,7 +47,6 @@ export default function UserProfilePanel() {
     handleClose();
   };
 
-  // Delete Account Logic
   const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
       "Are you sure you want to delete your account? This action cannot be undone."
@@ -67,30 +65,41 @@ export default function UserProfilePanel() {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
 
     const formData = new FormData(e.currentTarget);
-    const newName = formData.get("name");
 
     const result = await updateUserProfile(formData);
 
     if (result.success) {
+      const newName = formData.get("name");
+      const newEmail = formData.get("email");
+
       await update({
         ...session,
-        user: { ...session.user, name: newName },
+        user: {
+          ...session?.user,
+          name: newName,
+          email: newEmail,
+        },
       });
 
       setIsEditing(false);
       router.refresh();
     } else {
-      alert(result.message);
+      if (result.errors) {
+        setErrors(result.errors);
+      } else {
+        alert(result.message);
+      }
     }
   };
 
   const handleAvatarEdit = () => {
-    console.log("edit avatar");
+    console.log("Avatar edit not implemented yet");
   };
 
-  // Guest view
+  // guest view
   if (!user) {
     return (
       <div className={styles.panel}>
@@ -149,6 +158,7 @@ export default function UserProfilePanel() {
 
         <div className={styles.content}>
           <form className={userStyles.editForm} onSubmit={handleEditSubmit}>
+            {/* pfp */}
             <div className={userStyles.avatarEditWrapper}>
               <div className={userStyles.avatarLarge}>
                 {user.image ? (
@@ -174,7 +184,18 @@ export default function UserProfilePanel() {
 
             <div className={userStyles.inputGroup}>
               <label>Display Name</label>
-              <input type="text" defaultValue={user.name || ""} name="name" />
+              <input
+                type="text"
+                defaultValue={user.name || ""}
+                name="name"
+                autoComplete="name"
+                style={errors.name ? { borderColor: "red" } : {}}
+              />
+              {errors.name && (
+                <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+                  {errors.name[0]}
+                </p>
+              )}
             </div>
 
             <div className={userStyles.inputGroup}>
@@ -183,26 +204,84 @@ export default function UserProfilePanel() {
                 <Mail size={16} />
                 <input
                   type="email"
+                  name="email"
                   defaultValue={user.email || ""}
-                  disabled
-                  style={{ opacity: 0.7, cursor: "not-allowed" }}
+                  autoComplete="email"
+                  style={errors.email ? { borderColor: "red" } : {}}
                 />
               </div>
+              {errors.email && (
+                <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+                  {errors.email[0]}
+                </p>
+              )}
             </div>
 
             <div className={userStyles.inputGroup}>
-              <label>New Password</label>
+              <label>New Password (Optional)</label>
               <div className={userStyles.inputWithIcon}>
                 <Lock size={16} />
-                <input type="password" placeholder="••••••••" name="password" />
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  name="password"
+                  autoComplete="new-password"
+                  style={errors.password ? { borderColor: "red" } : {}}
+                />
               </div>
+              {errors.password && (
+                <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+                  {errors.password[0]}
+                </p>
+              )}
+            </div>
+
+            <div className={userStyles.inputGroup}>
+              <label>Confirm New Password</label>
+              <div className={userStyles.inputWithIcon}>
+                <Lock size={16} />
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  name="confirmNewPassword"
+                  autoComplete="new-password"
+                  style={
+                    errors.confirmNewPassword ? { borderColor: "red" } : {}
+                  }
+                />
+              </div>
+              {errors.confirmNewPassword && (
+                <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+                  {errors.confirmNewPassword[0]}
+                </p>
+              )}
+            </div>
+
+            <hr className={styles.divider} style={{ margin: "0" }} />
+
+            <div className={userStyles.inputGroup}>
+              <label>Current Password</label>
+              <div className={userStyles.inputWithIcon}>
+                <Lock size={16} />
+                <input
+                  type="password"
+                  placeholder="Enter current password"
+                  name="currentPassword"
+                  autoComplete="current-password"
+                  style={errors.currentPassword ? { borderColor: "red" } : {}}
+                />
+              </div>
+              {errors.currentPassword && (
+                <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+                  {errors.currentPassword[0]}
+                </p>
+              )}
             </div>
 
             <button type="submit" className={userStyles.btnPrimary}>
               Save Changes
             </button>
 
-            {/* delete acc btn */}
             <button
               type="button"
               onClick={handleDeleteAccount}
@@ -258,7 +337,6 @@ export default function UserProfilePanel() {
           </div>
         </div>
 
-        {/* Edit btn*/}
         <button
           className={userStyles.editTriggerBtn}
           onClick={() => setIsEditing(true)}

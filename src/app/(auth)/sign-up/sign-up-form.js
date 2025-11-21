@@ -11,9 +11,11 @@ import { signUpDefaultValues } from "@/src/lib/constants";
 import { signUpUser } from "@/src/lib/actions/user.actions";
 
 export default function SignUpForm() {
-  const [data, action] = useActionState(signUpUser, {
+  const [state, action] = useActionState(signUpUser, {
     success: false,
     message: "",
+    errors: {},
+    inputs: {},
   });
 
   const searchParams = useSearchParams();
@@ -41,10 +43,11 @@ export default function SignUpForm() {
             id="name"
             name="name"
             type="name"
+            className={styles.input}
+            style={state.errors?.name ? { borderColor: "red" } : {}}
             required
             autoComplete="name"
-            defaultValue={signUpDefaultValues.name}
-            className={styles.input}
+            defaultValue={state.inputs?.name || signUpDefaultValues.name}
           />
         </div>
         <div className={styles.formGroup}>
@@ -55,11 +58,17 @@ export default function SignUpForm() {
             id="email"
             name="email"
             type="email"
+            className={styles.input}
+            style={state.errors?.email ? { borderColor: "red" } : {}}
             required
             autoComplete="email"
-            defaultValue={signUpDefaultValues.email}
-            className={styles.input}
+            defaultValue={state.inputs?.email || signUpDefaultValues.email}
           />
+          {state.errors?.email && (
+            <p style={{ color: "red", fontSize: "12px" }}>
+              {state.errors.email[0]}
+            </p>
+          )}
         </div>
         <div className={styles.formGroup}>
           <label htmlFor="password" className={styles.label}>
@@ -70,10 +79,16 @@ export default function SignUpForm() {
             name="password"
             type="password"
             required
+            minLength={8}
             autoComplete="password"
-            defaultValue={signUpDefaultValues.password}
             className={styles.input}
+            style={state.errors?.password ? { borderColor: "red" } : {}}
           />
+          {state.errors?.password && (
+            <p style={{ color: "red", fontSize: "12px" }}>
+              {state.errors.password[0]}
+            </p>
+          )}
         </div>
         <div className={styles.formGroup}>
           <label htmlFor="confirmPassword" className={styles.label}>
@@ -85,16 +100,26 @@ export default function SignUpForm() {
             type="password"
             required
             autoComplete="confirmPassword"
-            defaultValue={signUpDefaultValues.confirmPassword}
             className={styles.input}
           />
+          {state.errors?.confirmPassword && (
+            <p style={{ color: "red", fontSize: "12px" }}>
+              {state.errors.confirmPassword[0]}
+            </p>
+          )}
         </div>
         <div>
           <SignUpButton />
         </div>
 
-        {data && !data.success && (
-          <div className={styles.errorText}>{data.message}</div>
+        {state.errors?.name && (
+          <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+            {state.errors.name[0]}
+          </p>
+        )}
+
+        {state && !state.success && (
+          <div className={styles.errorText}>{state.message}</div>
         )}
 
         <div className={styles.signUpLinkContainer}>
