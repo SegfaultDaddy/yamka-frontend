@@ -98,6 +98,7 @@ const Map = ({ routeData }) => {
     const mtLayer = new MaptilerLayer({
       style: initialStyleUrl,
       language: mapLanguage,
+      apiKey: process.env.NEXT_PUBLIC_MAPTILER_API_KEY,
     }).addTo(map.current);
     mapLayer.current = mtLayer;
     potholesLayer.current = L.featureGroup().addTo(map.current);
