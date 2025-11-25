@@ -126,11 +126,16 @@ const Map = ({ routeData }) => {
     mapLayer.current = mtLayer;
     potholesLayer.current = L.featureGroup().addTo(map.current);
 
+    // WakeLock API
     let wakeLock = null;
     const requestWakeLock = async () => {
       try {
         if ("wakeLock" in navigator) {
           wakeLock = await navigator.wakeLock.request("screen");
+
+          wakeLock.addEventListener("release", () => {
+            wakeLock = null;
+          });
         }
       } catch (err) {
         console.warn(`Wake Lock failed: ${err.name}, ${err.message}`);
@@ -140,7 +145,11 @@ const Map = ({ routeData }) => {
 
     // Re-request lock if user tabs out and comes back
     const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible" && wakeLock === null) {
+      if (wakeLock !== null && document.visibilityState === "visible") {
+        requestWakeLock();
+      }
+
+      if (document.visibilityState === "visible") {
         requestWakeLock();
       }
     };
@@ -202,7 +211,6 @@ const Map = ({ routeData }) => {
         },
         {
           enableHighAccuracy: true,
-          timeout: 5000,
           maximumAge: 0,
         }
       );
