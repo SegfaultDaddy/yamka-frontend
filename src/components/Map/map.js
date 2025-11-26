@@ -68,12 +68,12 @@ const Map = ({ routeData }) => {
   const watchId = useRef(null);
   const lastSpokenIndex = useRef(-1);
   const arrivalSpoken = useRef(false);
-  const isPuckInitialized = useRef(false);
+  const hasCenteredRef = useRef(false);
 
   // Local State
   const [showArrivalModal, setShowArrivalModal] = useState(false);
   const [showResumeModal, setShowResumeModal] = useState(false);
-  const [hasCenteredOnUser, setHasCenteredOnUser] = useState(false);
+  const [isMapReady, setIsMapReady] = useState(false);
 
   // Constants
   const center = { lat: 49.842957, lng: 24.031111 };
@@ -98,6 +98,35 @@ const Map = ({ routeData }) => {
     isLoading: isLoadingPotholes,
     error: potholeError,
   } = useGetPotholesQuery();
+
+  // Helper function to update puck and Redux
+  const updateUserPuck = useCallback(
+    (latitude, longitude, heading) => {
+      const newLatLng = [latitude, longitude];
+
+      if (userPuckMarker.current) {
+        userPuckMarker.current.setLatLng(newLatLng);
+
+        // Rotation logic
+        const iconElement = userPuckMarker.current.getElement();
+        if (iconElement && heading !== null && !isNaN(heading)) {
+          const puck = iconElement.querySelector(`.${styles.userPuck}`);
+          if (puck) {
+            puck.style.transform = `rotate(${heading}deg)`;
+          }
+        }
+      } else {
+        // Create marker if it doesn't exist
+        userPuckMarker.current = L.marker(newLatLng, {
+          icon: userLocationIcon,
+          zIndexOffset: 1000,
+        }).addTo(map.current);
+      }
+
+      dispatch(setUserLocation({ lat: latitude, lng: longitude }));
+    },
+    [dispatch]
+  );
 
   // Initialize Map & Geolocation
   useEffect(() => {
@@ -125,6 +154,8 @@ const Map = ({ routeData }) => {
     }).addTo(map.current);
     mapLayer.current = mtLayer;
     potholesLayer.current = L.featureGroup().addTo(map.current);
+
+    setIsMapReady(true);
 
     // WakeLock API
     let wakeLock = null;
@@ -155,56 +186,35 @@ const Map = ({ routeData }) => {
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    // Geolocation Logic
+    return () => {
+      if (wakeLock) wakeLock.release();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [center.lng, center.lat, zoom, mapLanguage, mapStyle]);
+
+  // Geolocation Logic
+  useEffect(() => {
+    if (!isMapReady || !map.current) return;
+
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
+          updateUserPuck(latitude, longitude, null);
 
-          if (!userPuckMarker.current) {
-            userPuckMarker.current = L.marker([latitude, longitude], {
-              icon: userLocationIcon,
-              zIndexOffset: 1000,
-            }).addTo(map.current);
-            isPuckInitialized.current = true;
-          }
-
-          dispatch(setUserLocation({ lat: latitude, lng: longitude }));
-
-          if (map.current && !hasCenteredOnUser) {
+          if (!hasCenteredRef.current) {
             map.current.setView([latitude, longitude], 15);
-            setHasCenteredOnUser(true);
+            hasCenteredRef.current = true;
           }
         },
         (error) => console.warn("Initial location error:", error.message),
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        { enableHighAccuracy: false, timeout: 5000, maximumAge: 0 }
       );
 
       watchId.current = navigator.geolocation.watchPosition(
         (position) => {
           const { latitude, longitude, heading } = position.coords;
-          const newLatLng = [latitude, longitude];
-
-          if (userPuckMarker.current) {
-            userPuckMarker.current.setLatLng(newLatLng);
-
-            // rotation logic
-            const iconElement = userPuckMarker.current.getElement();
-            if (iconElement && heading !== null && !isNaN(heading)) {
-              const puck = iconElement.querySelector(`.${styles.userPuck}`);
-              if (puck) {
-                puck.style.transform = `rotate(${heading}deg)`;
-              }
-            }
-          } else {
-            userPuckMarker.current = L.marker(newLatLng, {
-              icon: userLocationIcon,
-              zIndexOffset: 1000,
-            }).addTo(map.current);
-            isPuckInitialized.current = true;
-          }
-
-          dispatch(setUserLocation({ lat: latitude, lng: longitude }));
+          updateUserPuck(latitude, longitude, heading);
         },
         (error) => {
           console.error("Error watching position:", error.message);
@@ -218,29 +228,23 @@ const Map = ({ routeData }) => {
       console.error("Geolocation is not supported by this browser.");
     }
 
-    // Check for resume navigation
-    const appIsInNavigation =
-      JSON.parse(localStorage.getItem("isNavigating")) === true;
-    const appHasRoute = localStorage.getItem("currentRoute") !== null;
-
-    if (appIsInNavigation && appHasRoute) {
-      setShowResumeModal(true);
-    }
-
     return () => {
       if (watchId.current) navigator.geolocation.clearWatch(watchId.current);
-      if (wakeLock) wakeLock.release();
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [
-    center.lng,
-    center.lat,
-    zoom,
-    mapLanguage,
-    mapStyle,
-    dispatch,
-    hasCenteredOnUser,
-  ]);
+  }, [isMapReady, updateUserPuck]);
+
+  // Check for resume navigation
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const appIsInNavigation =
+        JSON.parse(localStorage.getItem("isNavigating")) === true;
+      const appHasRoute = localStorage.getItem("currentRoute") !== null;
+
+      if (appIsInNavigation && appHasRoute) {
+        setShowResumeModal(true);
+      }
+    }
+  }, []);
 
   // Map Language
   useEffect(() => {

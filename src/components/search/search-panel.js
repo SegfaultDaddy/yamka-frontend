@@ -31,7 +31,7 @@ import { translateInstruction } from "@/src/lib/utils/instructionTranslator";
 export default function SearchPanel() {
   const dispatch = useDispatch();
   const mapLanguage = useSelector((state) => state.ui.locale);
-  const { isMuted } = useSelector((state) => state.ui);
+  const { isMuted, userLocation } = useSelector((state) => state.ui);
 
   const [fromQuery, setFromQuery] = useState("");
   const [toQuery, setToQuery] = useState("");
@@ -111,15 +111,21 @@ export default function SearchPanel() {
   // Handle get location
   const handleGetLocation = () => {
     setFromQuery("My Current Location");
-    setFromCoords(null);
     setSuggestions([]);
     setActiveInput(null);
+
+    if (userLocation && userLocation.lat && userLocation.lng) {
+      setFromCoords([userLocation.lat, userLocation.lng]);
+      return;
+    }
+
+    setFromCoords(null);
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setFromCoords([latitude, longitude]); // Store as [lat, lng]
+          setFromCoords([latitude, longitude]); // [lat, lng]
         },
         (error) => {
           console.error("Error getting location:", error);
