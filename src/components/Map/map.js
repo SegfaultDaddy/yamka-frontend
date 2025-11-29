@@ -61,6 +61,7 @@ const Map = ({ routeData }) => {
   const potholesLayer = useRef(null);
   const userPuckMarker = useRef(null);
   const destinationMarker = useRef(null);
+  const userLocationRef = useRef(null);
 
   // Logic Refs
   const watchId = useRef(null);
@@ -107,6 +108,8 @@ const Map = ({ routeData }) => {
   const updateUserPuck = useCallback(
     (latitude, longitude, heading) => {
       const newLatLng = [latitude, longitude];
+
+      userLocationRef.current = { lat: latitude, lng: longitude };
 
       if (userPuckMarker.current) {
         userPuckMarker.current.setLatLng(newLatLng);
@@ -333,8 +336,15 @@ const Map = ({ routeData }) => {
       }
 
       const hasSufficientDistance = routeData.distance > 10;
+
       if (!isNavigating && hasSufficientDistance) {
         map.current.fitBounds(newRoute.getBounds(), { padding: [50, 50] });
+      } else if (isNavigating && userLocationRef.current) {
+        map.current.setView(
+          [userLocationRef.current.lat, userLocationRef.current.lng],
+          17
+        );
+        setIsAutoSnap(true);
       } else if (!hasSufficientDistance) {
         map.current.setView(
           [
