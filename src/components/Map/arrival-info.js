@@ -39,7 +39,8 @@ export default function ArrivalInfo() {
       !isClient ||
       !route ||
       !route.instructions ||
-      typeof currentInstructionIndex === "undefined"
+      typeof currentInstructionIndex === "undefined" ||
+      !isNavigating
     ) {
       return;
     }
@@ -59,6 +60,9 @@ export default function ArrivalInfo() {
         try {
           const distToNext = turfDistance(userPt, nextPt, { units: "meters" });
           distSum += distToNext;
+
+          const avgSpeed = 10;
+          timeSum += distToNext / avgSpeed;
         } catch (e) {
           console.warn("Turf distance calculation failed:", e);
         }
@@ -66,17 +70,23 @@ export default function ArrivalInfo() {
     }
 
     for (let i = currentInstructionIndex; i < route.instructions.length; i++) {
-      timeSum += route.instructions[i].time / 1000 || 0;
-      distSum += route.instructions[i].distance || 0;
+      const instruction = route.instructions[i];
+
+      if (i === currentInstructionIndex) {
+        timeSum += instruction.time / 1000 || 0;
+      } else {
+        timeSum += instruction.time / 1000 || 0;
+        distSum += instruction.distance || 0;
+      }
     }
 
     setRemainingTimeInSeconds(Math.floor(timeSum));
     setRemainingDistanceInMeters(distSum);
-  }, [route, currentInstructionIndex, isClient, userLocation]);
+  }, [route, currentInstructionIndex, isClient, userLocation, isNavigating]);
 
   // Effect to recalculate the ETA
   useEffect(() => {
-    if (remainingTimeInSeconds === null) return;
+    if (remainingTimeInSeconds === null || !isNavigating) return;
 
     const remainingMinutes = Math.floor(remainingTimeInSeconds / 60);
     let timerId;
@@ -92,7 +102,7 @@ export default function ArrivalInfo() {
 
     updateOnMinuteChange();
     return () => clearTimeout(timerId);
-  }, [remainingTimeInSeconds]);
+  }, [remainingTimeInSeconds, isNavigating]);
 
   const { duration, distance } = useMemo(() => {
     if (remainingTimeInSeconds === null || remainingDistanceInMeters === null) {

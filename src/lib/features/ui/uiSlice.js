@@ -14,7 +14,7 @@ const initialState = {
   userLocation: null,
   destinationCoords: getFromLocalStorage("destinationCoords", null),
   isReRouting: false,
-  currentInstructionIndex: 0,
+  currentInstructionIndex: getFromLocalStorage("currentInstructionIndex", 0),
 };
 
 export const uiSlice = createSlice({
@@ -38,6 +38,7 @@ export const uiSlice = createSlice({
         localStorage.setItem("currentRoute", JSON.stringify(action.payload));
       } else {
         localStorage.removeItem("currentRoute");
+        localStorage.removeItem("currentInstructionIndex");
       }
     },
     setLocale: (state, action) => {
@@ -67,6 +68,11 @@ export const uiSlice = createSlice({
     setIsNavigating: (state, action) => {
       state.isNavigating = action.payload;
       localStorage.setItem("isNavigating", JSON.stringify(action.payload));
+
+      if (!action.payload) {
+        state.currentInstructionIndex = 0;
+        localStorage.removeItem("currentInstructionIndex");
+      }
     },
     setUserLocation: (state, action) => {
       state.userLocation = action.payload;
@@ -87,6 +93,13 @@ export const uiSlice = createSlice({
     },
     setCurrentInstructionIndex: (state, action) => {
       state.currentInstructionIndex = action.payload;
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          "currentInstructionIndex",
+          JSON.stringify(action.payload)
+        );
+      }
     },
   },
 });

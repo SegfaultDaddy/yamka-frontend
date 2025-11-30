@@ -68,6 +68,7 @@ const Map = ({ routeData }) => {
   const lastSpokenIndex = useRef(-1);
   const arrivalSpoken = useRef(false);
   const hasCenteredRef = useRef(false);
+  const isReroutingRef = useRef(false);
 
   // Local State
   const [showArrivalModal, setShowArrivalModal] = useState(false);
@@ -100,9 +101,15 @@ const Map = ({ routeData }) => {
     error: potholeError,
   } = useGetPotholesQuery();
 
+  // Sync isAutoSnap to ref
   useEffect(() => {
     isAutoSnapRef.current = isAutoSnap;
   }, [isAutoSnap]);
+
+  // Sync isReRouting to ref
+  useEffect(() => {
+    isReroutingRef.current = isReRouting;
+  }, [isReRouting]);
 
   // Helper function to update puck and Redux
   const updateUserPuck = useCallback(
@@ -114,7 +121,7 @@ const Map = ({ routeData }) => {
       if (userPuckMarker.current) {
         userPuckMarker.current.setLatLng(newLatLng);
 
-        // user puck rotation  logic
+        // user puck rotation logic
         const iconElement = userPuckMarker.current.getElement();
         if (iconElement && heading !== null && !isNaN(heading)) {
           const puck = iconElement.querySelector(`.${styles.userPuck}`);
@@ -287,8 +294,10 @@ const Map = ({ routeData }) => {
       destinationMarker.current = null;
     }
 
-    lastSpokenIndex.current = -1;
-    arrivalSpoken.current = false;
+    if (!routeData) {
+      lastSpokenIndex.current = -1;
+      arrivalSpoken.current = false;
+    }
 
     if (routeData && routeData.points) {
       const newRoute = L.geoJSON(routeData.points, {
@@ -416,6 +425,10 @@ const Map = ({ routeData }) => {
   }, [potholes, showPotholes, severityFilter, isLoadingPotholes, potholeError]);
 
   const handleReroute = useCallback(async () => {
+    if (isReroutingRef.current) {
+      return;
+    }
+
     dispatch(setIsReRouting(true));
     const fromCoords = [userLocation.lat, userLocation.lng];
     const toCoords = destinationCoords;
@@ -427,105 +440,110 @@ const Map = ({ routeData }) => {
         dispatch(setCurrentInstructionIndex(0));
         lastSpokenIndex.current = -1;
         arrivalSpoken.current = false;
+      } else {
+        console.error("Failed to get new route");
       }
     }
+
     setTimeout(() => {
       dispatch(setIsReRouting(false));
     }, 3000);
   }, [dispatch, userLocation, destinationCoords, mapLanguage]);
 
-  // navigation logic
+  // Main nav logic
   useEffect(() => {
     if (!map.current) return;
-    if (isNavigating && userLocation && !showResumeModal) {
-      if (
-        routeData &&
-        routeData.points &&
-        routeData.points.type === "LineString"
-      ) {
-        if (
-          typeof distance !== "function" ||
-          typeof pointToLineDistance !== "function"
-        ) {
-          console.warn("Turf functions not ready");
-          return;
-        }
+    if (!isNavigating || !userLocation || showResumeModal) return;
+    if (
+      !routeData ||
+      !routeData.points ||
+      routeData.points.type !== "LineString"
+    )
+      return;
+    if (
+      typeof distance !== "function" ||
+      typeof pointToLineDistance !== "function"
+    ) {
+      console.warn("Turf functions not ready");
+      return;
+    }
 
-        if (!isReRouting) {
-          const userPoint = [userLocation.lng, userLocation.lat];
-          const routeLine = routeData.points;
-          const distanceToRoute = pointToLineDistance(userPoint, routeLine, {
-            units: "meters",
-          });
+    if (isReroutingRef.current) {
+      return;
+    }
 
-          if (distanceToRoute > 30) {
-            handleReroute();
-            return;
-          }
+    const userPoint = [userLocation.lng, userLocation.lat];
+    const routeLine = routeData.points;
 
-          const instructions = routeData.instructions;
-          const nextInstruction = instructions[currentInstructionIndex];
+    // Check if user is off route
+    const distanceToRoute = pointToLineDistance(userPoint, routeLine, {
+      units: "meters",
+    });
 
-          if (nextInstruction) {
-            const isFirstInstruction = currentInstructionIndex === 0;
+    if (distanceToRoute > 30) {
+      handleReroute();
+      return;
+    }
 
-            if (nextInstruction.sign === 4) {
-              const routeCoords = routeData.points.coordinates;
-              const destination = routeCoords[routeCoords.length - 1];
-              const distanceToDest = distance(userPoint, destination, {
-                units: "meters",
-              });
+    const instructions = routeData.instructions;
 
-              if (
-                distanceToDest < 50 &&
-                !showArrivalModal &&
-                !arrivalSpoken.current
-              ) {
-                arrivalSpoken.current = true;
-                speak(
-                  "You have arrived at your destination.",
-                  mapLanguage,
-                  () => {
-                    setShowArrivalModal(true);
-                    dispatch(setIsNavigating(false));
-                    dispatch(setCurrentInstructionIndex(0));
-                    setIsAutoSnap(false);
-                  }
-                );
-              }
-            } else if (
-              nextInstruction.points &&
-              nextInstruction.points.length > 0
-            ) {
-              const maneuverPoint = nextInstruction.points[0];
-              const distanceToManeuver = distance(userPoint, maneuverPoint, {
-                units: "meters",
-              });
+    // Validate currentInstructionIndex
+    if (currentInstructionIndex >= instructions.length) {
+      console.warn("Current instruction index out of bounds");
+      return;
+    }
 
-              const speechTriggerDistance = 100;
-              const advanceInstructionDistance = 35;
-              const englishInstruction = translateInstruction(nextInstruction);
+    const nextInstruction = instructions[currentInstructionIndex];
 
-              const shouldSpeak =
-                (isFirstInstruction && lastSpokenIndex.current < 0) ||
-                distanceToManeuver < speechTriggerDistance;
+    if (!nextInstruction) {
+      console.warn("No next instruction found");
+      return;
+    }
 
-              if (
-                shouldSpeak &&
-                lastSpokenIndex.current < currentInstructionIndex
-              ) {
-                lastSpokenIndex.current = currentInstructionIndex;
-                speak(englishInstruction, "en");
-              }
+    const isFirstInstruction = currentInstructionIndex === 0;
 
-              if (distanceToManeuver < advanceInstructionDistance) {
-                dispatch(
-                  setCurrentInstructionIndex(currentInstructionIndex + 1)
-                );
-              }
-            }
-          }
-        }
+    // Check if this is the arrival instruction
+    if (nextInstruction.sign === 4) {
+      const routeCoords = routeData.points.coordinates;
+      const destination = routeCoords[routeCoords.length - 1];
+      const distanceToDest = distance(userPoint, destination, {
+        units: "meters",
+      });
+
+      if (distanceToDest < 50 && !showArrivalModal && !arrivalSpoken.current) {
+        arrivalSpoken.current = true;
+        speak("You have arrived at your destination.", mapLanguage, () => {
+          setShowArrivalModal(true);
+          dispatch(setIsNavigating(false));
+          dispatch(setCurrentInstructionIndex(0));
+          setIsAutoSnap(false);
+        });
+      }
+    } else if (nextInstruction.points && nextInstruction.points.length > 0) {
+      const maneuverPoint = nextInstruction.points[0];
+      const distanceToManeuver = distance(userPoint, maneuverPoint, {
+        units: "meters",
+      });
+
+      const speechTriggerDistance = 100;
+      const advanceInstructionDistance = 35;
+      const englishInstruction = translateInstruction(nextInstruction);
+
+      // Speak instruction when approaching OR if it's the first instruction and hasn't been spoken
+      const shouldSpeak =
+        (isFirstInstruction && lastSpokenIndex.current < 0) ||
+        (distanceToManeuver < speechTriggerDistance &&
+          lastSpokenIndex.current < currentInstructionIndex);
+
+      if (shouldSpeak) {
+        lastSpokenIndex.current = currentInstructionIndex;
+        speak(englishInstruction, "en");
+      }
+
+      //  Advance to next instruction when close enough
+      if (distanceToManeuver < advanceInstructionDistance) {
+        const nextIndex = currentInstructionIndex + 1;
+        dispatch(setCurrentInstructionIndex(nextIndex));
       }
     }
   }, [
@@ -535,7 +553,6 @@ const Map = ({ routeData }) => {
     dispatch,
     showArrivalModal,
     destinationCoords,
-    isReRouting,
     handleReroute,
     showResumeModal,
     currentInstructionIndex,
